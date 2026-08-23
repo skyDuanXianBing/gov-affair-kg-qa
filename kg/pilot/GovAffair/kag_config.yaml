@@ -1,0 +1,140 @@
+# GovAffair 项目配置（v0.2 更新）
+# vectorizer: ollama bge-m3 真实端点（本机 11434，容器经 en0 IP 可达）
+# chat_llm: 2026-08-09 接入真实 DeepSeek API（model: deepseek-v4-flash，flash 变体，
+#   直连 api.deepseek.com 不走代理；api_key 为环境变量占位符 ${DEEPSEEK_API_KEY}——
+#   KAG 原生工具（knext project update 等）不解析占位符，使用前临时替换真实 key 且勿提交；
+#   自建 RAG（qa/）不读此值，走 env / .env，见 .env.example）
+# openie_llm: 保持 mock 不动（结构化建图路线，builder 不做 LLM 抽取）
+openie_llm:
+  type: maas
+  base_url: http://192.168.111.177:18999/v1
+  api_key: mock
+  model: mock-chat
+  enable_check: false
+
+chat_llm: &chat_llm
+  type: maas
+  base_url: https://api.deepseek.com
+  api_key: ${DEEPSEEK_API_KEY}
+  model: deepseek-v4-flash
+  enable_check: true
+
+vectorize_model: &vectorize_model
+  type: openai
+  base_url: http://192.168.111.177:11434/v1
+  api_key: ollama
+  model: bge-m3
+  vector_dimensions: 1024
+  enable_check: false
+vectorizer: *vectorize_model
+
+log:
+  level: INFO
+
+project:
+  biz_scene: default
+  host_addr: http://127.0.0.1:8887
+  language: zh
+  namespace: GovAffair
+  checkpoint_path: ./builder/ckpt
+  id: '1'
+
+# BatchVectorizer 配置（builder 链向量化组件用）
+chain_vectorizer:
+  type: batch
+  vectorize_model: *vectorize_model
+  # 2026-08-10 遗留修复：LegalCitation.content 超长（>8192 tokens）导致 2 节点向量化失败；
+  # content 向量非问答必需（实体链接只用 name 向量），禁用其生成后重跑补齐。
+  disable_generation:
+    - "LegalCitation.content"
+    - "GovAffair.LegalCitation.content"
+
+#------------kag-solver configuration start----------------#
+# 2026-08-09 任务B新增（问答/召回链路验证，additive 不动既有段）：
+# - solver_llm 经 YAML merge 复用 chat_llm 的 DeepSeek 端点，enable_check: false、max_tokens 2048（控制计费）
+# - 检索仅启用 kg_cs（实体链接+精确一跳，entity linking 走 search_text/向量，不耗 LLM）与 rc（chunk 向量召回；
+#   试点图无 Chunk 节点，预期空召回但保留召回痕迹）；刻意不启用 kg_fr（fuzzy_one_hop_select/ppr 按实体耗 LLM，超预算）
+# - merger 为 rrf 融合（不耗 LLM）；enable_summary: false；max_iteration: 1（跳过 finish_judger 额外调用）
+# - openie_llm 全程保持 mock，solver 链路任何组件均不引用它
+solver_llm: &solver_llm
+  <<: *chat_llm
+  max_tokens: 2048
+  enable_check: false
+
+search_api: &search_api
+  type: openspg_search_api
+
+graph_api: &graph_api
+  type: openspg_graph_api
+
+kg_cs: &kg_cs
+  type: kg_cs_open_spg
+  llm: *solver_llm
+  path_select:
+    type: exact_one_hop_select
+    graph_api: *graph_api
+    search_api: *search_api
+  entity_linking:
+    type: entity_linking
+    graph_api: *graph_api
+    search_api: *search_api
+    recognition_threshold: 0.9
+    # 2026-08-10 全量节点向量化完成（107,066/107,068 节点有 _name_vector）后，
+    # 移除任务B验证期变通 exclude_types: Material；实体链接向量路径已生效（本回归验证）。
+    # Chunk 为 benchmark 基线排除项（结构化建图无 Chunk 节点），保留。
+    exclude_types:
+      - "Chunk"
+
+rc: &rc
+  type: rc_open_spg
+  vectorize_model: *vectorize_model
+  search_api: *search_api
+  vector_chunk_retriever:
+    type: vector_chunk_retriever_legacy
+    vectorize_model: *vectorize_model
+    search_api: *search_api
+  top_k: 10
+
+kag_hybrid_executor: &kag_hybrid_executor_conf
+  type: kag_hybrid_retrieval_executor
+  retrievers:
+    - *kg_cs
+    - *rc
+  merger:
+    type: kag_merger
+  # 任务B：必须为 true。KAG 设计使然——检索结果仅经 summary 写入 task/context，
+  # enable_summary=false 时召回的 SPO 到不了生成器，最终答案退化为 LLM 先验（已实测）。
+  enable_summary: true
+
+kag_output_executor: &kag_output_executor_conf
+  type: kag_output_executor
+  llm_module: *solver_llm
+
+kag_deduce_executor: &kag_deduce_executor_conf
+  type: kag_deduce_executor
+  llm_module: *solver_llm
+
+kag_solver_pipeline:
+  type: kag_static_pipeline
+  planner:
+    type: lf_kag_static_planner
+    llm: *solver_llm
+    plan_prompt:
+      type: govaffair_lf_plan   # 任务B: schema感知few-shot（solver/prompt/logic_form_plan.py），原为 default_lf_static_planning
+    rewrite_prompt:
+      type: default_rewrite_sub_task_query
+  executors:
+    - *kag_hybrid_executor_conf
+    - *kag_deduce_executor_conf
+    - *kag_output_executor_conf
+  generator:
+    type: llm_generator
+    llm_client: *solver_llm
+    generated_prompt:
+      type: default_refer_generator_prompt
+    chunk_reranker:
+      type: rerank_by_vector
+      vectorize_model: *vectorize_model
+    enable_ref: true
+  max_iteration: 1
+#------------kag-solver configuration end----------------#

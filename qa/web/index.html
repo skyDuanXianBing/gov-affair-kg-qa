@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>政务事项智能问答</title>
+<style>
+  :root {
+    --gov-blue: #1a4f8a;
+    --gov-blue-dark: #143d6b;
+    --gov-blue-light: #e8f1fa;
+    --bg: #f4f6f9;
+    --border: #dce3ec;
+    --text: #24313f;
+    --text-sub: #6b7a8d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; flex-direction: column; height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-dark));
+    color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12); flex-shrink: 0;
+  }
+  header .logo {
+    width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,.16);
+    display: flex; align-items: center; justify-content: center; font-size: 19px;
+  }
+  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+  header .sub { font-size: 12px; opacity: .75; margin-left: 2px; }
+  header .actions { margin-left: auto; }
+  header button {
+    background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.3);
+    padding: 5px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+  }
+  header button:hover { background: rgba(255,255,255,.24); }
+
+  #chat { flex: 1; overflow-y: auto; padding: 22px 0; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+  .welcome { text-align: center; padding: 36px 20px 10px; color: var(--text-sub); }
+  .welcome .icon { font-size: 40px; margin-bottom: 10px; }
+  .welcome h2 { color: var(--text); font-size: 19px; margin-bottom: 8px; font-weight: 600; }
+  .welcome p { font-size: 13.5px; line-height: 1.7; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .examples button {
+    background: #fff; border: 1px solid var(--border); color: var(--gov-blue);
+    padding: 7px 14px; border-radius: 16px; font-size: 13px; cursor: pointer;
+    transition: all .15s;
+  }
+  .examples button:hover { border-color: var(--gov-blue); background: var(--gov-blue-light); }
+
+  .msg { display: flex; margin-bottom: 18px; }
+  .msg.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 82%; padding: 11px 15px; border-radius: 10px;
+    font-size: 14.5px; line-height: 1.75; word-break: break-word;
+  }
+  .msg.user .bubble {
+    background: var(--gov-blue); color: #fff; border-bottom-right-radius: 3px;
+  }
+  .msg.bot .bubble {
+    background: #fff; border: 1px solid var(--border); border-bottom-left-radius: 3px;
+    box-shadow: 0 1px 3px rgba(20,40,70,.05);
+  }
+  .bubble strong { color: var(--gov-blue-dark); }
+  .msg.user .bubble strong { color: #fff; }
+  .bubble ol, .bubble ul { padding-left: 1.4em; margin: 4px 0; }
+  .bubble p { margin: 4px 0; }
+
+  .meta {
+    margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--border);
+    font-size: 12px; color: var(--text-sub); display: flex; flex-wrap: wrap; gap: 6px 14px;
+    align-items: center;
+  }
+  .meta .tag {
+    background: var(--gov-blue-light); color: var(--gov-blue-dark);
+    padding: 1px 8px; border-radius: 10px; font-size: 11.5px;
+  }
+  details { margin-top: 8px; font-size: 12px; }
+  details summary {
+    cursor: pointer; color: var(--gov-blue); user-select: none; outline: none;
+  }
+  details .ctx {
+    margin-top: 6px; background: #f8fafc; border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px; white-space: pre-wrap;
+    font-family: "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 1.6;
+    max-height: 320px; overflow-y: auto; color: #45566b;
+  }
+  .seed-row { display: flex; justify-content: space-between; padding: 1px 0; }
+  .seed-row .score { color: var(--text-sub); }
+
+  .loading { display: inline-flex; align-items: center; gap: 8px; color: var(--text-sub); }
+  .loading .dots span {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gov-blue); margin-right: 3px; animation: blink 1.2s infinite;
+  }
+  .loading .dots span:nth-child(2) { animation-delay: .2s; }
+  .loading .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+
+  .err { color: #b3372f; }
+
+  footer {
+    flex-shrink: 0; background: #fff; border-top: 1px solid var(--border); padding: 12px 0 14px;
+  }
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+  #q {
+    flex: 1; resize: none; border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 13px; font-size: 14.5px; font-family: inherit; line-height: 1.5;
+    max-height: 120px; outline: none; transition: border-color .15s;
+  }
+  #q:focus { border-color: var(--gov-blue); }
+  #send {
+    background: var(--gov-blue); color: #fff; border: none; border-radius: 8px;
+    padding: 0 22px; height: 42px; font-size: 14.5px; cursor: pointer; flex-shrink: 0;
+  }
+  #send:hover { background: var(--gov-blue-dark); }
+  #send:disabled { background: #9db4cc; cursor: not-allowed; }
+  .hint { text-align: center; font-size: 11.5px; color: #9aa7b5; margin-top: 7px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">政</div>
+  <h1>政务事项智能问答</h1>
+  <span class="sub">基于政务知识图谱（107,068 节点 / 375,415 边）· RAG</span>
+  <div class="actions"><button onclick="clearChat()">清空对话</button></div>
+</header>
+
+<div id="chat"><div class="wrap" id="msgs">
+  <div class="welcome" id="welcome">
+    <div class="icon">🏛️</div>
+    <h2>您好，我是政务问答助手</h2>
+    <p>我可以回答政务事项的<strong>所需材料、受理条件、办理流程、办理时限、法律依据</strong>等问题，<br>答案均来自知识图谱检索，并附来源引用。</p>
+    <div class="examples">
+      <button onclick="askExample(this)">申领居住证需要提交哪些材料？</button>
+      <button onclick="askExample(this)">申领居住证的办理流程是什么？要多久能拿到？</button>
+      <button onclick="askExample(this)">申领居住证的法律依据是什么？</button>
+      <button onclick="askExample(this)">注销居住证需要什么材料？</button>
+    </div>
+  </div>
+</div></div>
+
+<footer>
+  <div class="wrap">
+    <div class="input-row">
+      <textarea id="q" rows="1" placeholder="请输入您的问题，如：申领居住证需要提交哪些材料？"></textarea>
+      <button id="send" onclick="send()">发送</button>
+    </div>
+    <div class="hint">Enter 发送 · Shift+Enter 换行 · 回答由知识图谱检索增强生成，仅供参考</div>
+  </div>
+</footer>
+
+<script>
+const msgs = document.getElementById('msgs');
+const q = document.getElementById('q');
+const sendBtn = document.getElementById('send');
+// 多轮对话历史（内存态，刷新清空）
+let history = [];
+const MAX_HISTORY = 8; // 最近 4 轮（8 条）
+
+q.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+q.addEventListener('input', () => {
+  q.style.height = 'auto';
+  q.style.height = Math.min(q.scrollHeight, 120) + 'px';
+});
+q.focus();
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// 极简 markdown：粗体 / 有序无序列表 / 换行
+function md(src) {
+  const lines = esc(src).split('\n');
+  let html = '', inOl = false, inUl = false;
+  const closeLists = () => {
+    if (inOl) { html += '</ol>'; inOl = false; }
+    if (inUl) { html += '</ul>'; inUl = false; }
+  };
+  for (let line of lines) {
+    line = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const ol = line.match(/^\s*\d+[.、]\s+(.*)$/);
+    const ul = line.match(/^\s*[-*•]\s+(.*)$/);
+    if (ol) {
+      if (!inOl) { closeLists(); html += '<ol>'; inOl = true; }
+      html += '<li>' + ol[1] + '</li>';
+    } else if (ul) {
+      if (!inUl) { closeLists(); html += '<ul>'; inUl = true; }
+      html += '<li>' + ul[1] + '</li>';
+    } else {
+      closeLists();
+      if (line.trim()) html += '<p>' + line + '</p>';
+    }
+  }
+  closeLists();
+  return html;
+}
+
+function scrollBottom() {
+  const chat = document.getElementById('chat');
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addMsg(role, html) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = `<div class="bubble">${html}</div>`;
+  msgs.appendChild(div);
+  scrollBottom();
+  return div;
+}
+
+function askExample(btn) {
+  q.value = btn.textContent.trim();
+  send();
+}
+
+function clearChat() {
+  location.reload();
+}
+
+async function send() {
+  const question = q.value.trim();
+  if (!question || sendBtn.disabled) return;
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
+
+  addMsg('user', esc(question));
+  q.value = ''; q.style.height = 'auto';
+  sendBtn.disabled = true;
+
+  const loadingDiv = addMsg('bot',
+    '<span class="loading"><span class="dots"><span></span><span></span><span></span></span><span id="loadtxt">正在理解问题…</span></span>');
+  const phases = history.length
+    ? ['正在理解问题…', '正在检索知识库…', '正在生成回答…']
+    : ['正在检索知识库…', '正在生成回答…', '即将完成…'];
+  let pi = 0;
+  const timer = setInterval(() => {
+    pi = Math.min(pi + 1, phases.length - 1);
+    const el = document.getElementById('loadtxt');
+    if (el) el.textContent = phases[pi];
+  }, 2500);
+
+  try {
+    const resp = await fetch('/api/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question, history}),
+    });
+    const data = await resp.json();
+    clearInterval(timer);
+    loadingDiv.remove();
+
+    if (!resp.ok) {
+      addMsg('bot', `<span class="err">出错了：${esc(data.error || resp.statusText)}</span>`);
+      return;
+    }
+
+    let html = '';
+    // 追问被改写时透明化展示
+    if (data.rewritten && data.rewritten !== question) {
+      html += `<p style="font-size:12.5px;color:var(--text-sub);margin-bottom:6px;">` +
+        `🔍 追问理解为：<em>${esc(data.rewritten)}</em></p>`;
+    }
+    html += md(data.answer || '（空回答）');
+    const seenTag = new Set();
+    const topSeeds = (data.seeds || []).filter(s => {
+      const k = s.label + s.name;
+      if (seenTag.has(k)) return false;
+      seenTag.add(k);
+      return true;
+    }).slice(0, 4);
+    html += `<div class="meta">` +
+      topSeeds.map(s => `<span class="tag">${esc(s.label)}·${esc(s.name)}</span>`).join('') +
+      `<span>检索 ${data.retrieve_ms}ms · 生成 ${data.generate_ms}ms</span></div>`;
+
+    if (data.context) {
+      const seedsHtml = (data.seeds || []).map(s =>
+        `<div class="seed-row"><span>[${esc(s.label)}] ${esc(s.name)}</span><span class="score">${s.score}</span></div>`
+      ).join('');
+      html += `<details><summary>检索详情（命中 ${data.seeds.length} 个节点）</summary>` +
+        `<div class="ctx">${seedsHtml}<br>${esc(data.context)}</div></details>`;
+    }
+    addMsg('bot', html);
+    // 写入多轮历史
+    history.push({role: 'user', content: question});
+    history.push({role: 'assistant', content: data.answer || ''});
+    if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
+  } catch (e) {
+    clearInterval(timer);
+    loadingDiv.remove();
+    addMsg('bot', `<span class="err">网络错误：${esc(String(e))}</span>`);
+  } finally {
+    sendBtn.disabled = false;
+    q.focus();
+  }
+}
+</script>
+</body>
+</html>

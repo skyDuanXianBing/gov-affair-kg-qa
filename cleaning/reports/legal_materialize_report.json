@@ -1,0 +1,734 @@
+{
+ "run_id": "materialize-legal-2026-08",
+ "schema_version": "gdzwfw-large-human-readable-v1",
+ "started_at": "2026-08-09T13:26:15+0800",
+ "finished_at": "2026-08-09T13:34:22+0800",
+ "elapsed_seconds": 487.1,
+ "source_dir": "/Volumes/f/AllMyData/MyUnderGraduate/政务大模型/data/法人服务",
+ "outdir": "/Volumes/f/AllMyData/MyUnderGraduate/政务大模型/data/cleaned/法人服务",
+ "rejects_file": "/Volumes/f/AllMyData/MyUnderGraduate/政务大模型/data/cleaned/rejects/法人服务_rejects.jsonl",
+ "files": {
+  "交通运输.jsonl": {
+   "input": 32391,
+   "output": 26887,
+   "duplicates": 49,
+   "v2_rescued": 7,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 1714,
+   "tab_normalized_rows": 829,
+   "rejects": {
+    "bad_json": 5112,
+    "no_audit_item": 343,
+    "missing_code_or_name": 0
+   }
+  },
+  "人力资源.jsonl": {
+   "input": 35172,
+   "output": 34251,
+   "duplicates": 19,
+   "v2_rescued": 5,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 6533,
+   "tab_normalized_rows": 419,
+   "rejects": {
+    "bad_json": 710,
+    "no_audit_item": 192,
+    "missing_code_or_name": 0
+   }
+  },
+  "公安消防.jsonl": {
+   "input": 1330,
+   "output": 1298,
+   "duplicates": 11,
+   "v2_rescued": 2,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 13,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 21,
+    "missing_code_or_name": 0
+   }
+  },
+  "公用事业.jsonl": {
+   "input": 24760,
+   "output": 23209,
+   "duplicates": 195,
+   "v2_rescued": 1,
+   "fallback_rescued": 1,
+   "html_normalized_rows": 308,
+   "tab_normalized_rows": 440,
+   "rejects": {
+    "bad_json": 1278,
+    "no_audit_item": 78,
+    "missing_code_or_name": 0
+   }
+  },
+  "其他.jsonl": {
+   "input": 80573,
+   "output": 64145,
+   "duplicates": 964,
+   "v2_rescued": 15,
+   "fallback_rescued": 1,
+   "html_normalized_rows": 277,
+   "tab_normalized_rows": 607,
+   "rejects": {
+    "bad_json": 14768,
+    "no_audit_item": 696,
+    "missing_code_or_name": 0
+   }
+  },
+  "农林牧渔.jsonl": {
+   "input": 42971,
+   "output": 41046,
+   "duplicates": 1529,
+   "v2_rescued": 0,
+   "fallback_rescued": 1,
+   "html_normalized_rows": 425,
+   "tab_normalized_rows": 111,
+   "rejects": {
+    "bad_json": 284,
+    "no_audit_item": 112,
+    "missing_code_or_name": 0
+   }
+  },
+  "准营准办.jsonl": {
+   "input": 15553,
+   "output": 9183,
+   "duplicates": 2101,
+   "v2_rescued": 24,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 48,
+   "tab_normalized_rows": 245,
+   "rejects": {
+    "bad_json": 3408,
+    "no_audit_item": 861,
+    "missing_code_or_name": 0
+   }
+  },
+  "劳动保障.jsonl": {
+   "input": 8229,
+   "output": 5841,
+   "duplicates": 2339,
+   "v2_rescued": 3,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 122,
+   "tab_normalized_rows": 51,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 49,
+    "missing_code_or_name": 0
+   }
+  },
+  "医疗卫生.jsonl": {
+   "input": 27485,
+   "output": 24393,
+   "duplicates": 1592,
+   "v2_rescued": 8,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 93,
+   "tab_normalized_rows": 775,
+   "rejects": {
+    "bad_json": 1136,
+    "no_audit_item": 364,
+    "missing_code_or_name": 0
+   }
+  },
+  "司法公证.jsonl": {
+   "input": 16817,
+   "output": 14171,
+   "duplicates": 2646,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 215,
+   "tab_normalized_rows": 15,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 0,
+    "missing_code_or_name": 0
+   }
+  },
+  "商务贸易.jsonl": {
+   "input": 883,
+   "output": 394,
+   "duplicates": 203,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 2,
+   "tab_normalized_rows": 3,
+   "rejects": {
+    "bad_json": 284,
+    "no_audit_item": 2,
+    "missing_code_or_name": 0
+   }
+  },
+  "国土和规划建设.jsonl": {
+   "input": 16163,
+   "output": 14374,
+   "duplicates": 499,
+   "v2_rescued": 4,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 1362,
+   "tab_normalized_rows": 113,
+   "rejects": {
+    "bad_json": 994,
+    "no_audit_item": 296,
+    "missing_code_or_name": 0
+   }
+  },
+  "土地房产.jsonl": {
+   "input": 38168,
+   "output": 33471,
+   "duplicates": 1707,
+   "v2_rescued": 4,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 331,
+   "tab_normalized_rows": 705,
+   "rejects": {
+    "bad_json": 2414,
+    "no_audit_item": 576,
+    "missing_code_or_name": 0
+   }
+  },
+  "地方特色分类.jsonl": {
+   "input": 2359,
+   "output": 2052,
+   "duplicates": 155,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 2,
+   "rejects": {
+    "bad_json": 142,
+    "no_audit_item": 10,
+    "missing_code_or_name": 0
+   }
+  },
+  "城市综合执法.jsonl": {
+   "input": 5531,
+   "output": 3751,
+   "duplicates": 1410,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 1,
+   "tab_normalized_rows": 14,
+   "rejects": {
+    "bad_json": 284,
+    "no_audit_item": 86,
+    "missing_code_or_name": 0
+   }
+  },
+  "安全生产.jsonl": {
+   "input": 9755,
+   "output": 8472,
+   "duplicates": 376,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 174,
+   "tab_normalized_rows": 150,
+   "rejects": {
+    "bad_json": 852,
+    "no_audit_item": 55,
+    "missing_code_or_name": 0
+   }
+  },
+  "安全防护.jsonl": {
+   "input": 1414,
+   "output": 1247,
+   "duplicates": 162,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 3,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 5,
+    "missing_code_or_name": 0
+   }
+  },
+  "对外交流.jsonl": {
+   "input": 77,
+   "output": 35,
+   "duplicates": 39,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 3,
+    "missing_code_or_name": 0
+   }
+  },
+  "年审年检.jsonl": {
+   "input": 2485,
+   "output": 1841,
+   "duplicates": 607,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 2,
+   "tab_normalized_rows": 605,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 37,
+    "missing_code_or_name": 0
+   }
+  },
+  "应对气候变化.jsonl": {
+   "input": 98,
+   "output": 84,
+   "duplicates": 14,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 1,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 0,
+    "missing_code_or_name": 0
+   }
+  },
+  "建设管理.jsonl": {
+   "input": 31493,
+   "output": 17481,
+   "duplicates": 9236,
+   "v2_rescued": 13,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 796,
+   "tab_normalized_rows": 505,
+   "rejects": {
+    "bad_json": 4402,
+    "no_audit_item": 374,
+    "missing_code_or_name": 0
+   }
+  },
+  "投资审批.jsonl": {
+   "input": 1328,
+   "output": 1082,
+   "duplicates": 161,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 20,
+   "tab_normalized_rows": 2,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 85,
+    "missing_code_or_name": 0
+   }
+  },
+  "抵押质押.jsonl": {
+   "input": 2381,
+   "output": 706,
+   "duplicates": 31,
+   "v2_rescued": 4,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 1420,
+    "no_audit_item": 224,
+    "missing_code_or_name": 0
+   }
+  },
+  "招标拍卖.jsonl": {
+   "input": 147,
+   "output": 108,
+   "duplicates": 39,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 0,
+    "missing_code_or_name": 0
+   }
+  },
+  "文体教育.jsonl": {
+   "input": 18733,
+   "output": 15707,
+   "duplicates": 897,
+   "v2_rescued": 8,
+   "fallback_rescued": 1,
+   "html_normalized_rows": 1694,
+   "tab_normalized_rows": 225,
+   "rejects": {
+    "bad_json": 1988,
+    "no_audit_item": 141,
+    "missing_code_or_name": 0
+   }
+  },
+  "文物保护.jsonl": {
+   "input": 5032,
+   "output": 2033,
+   "duplicates": 2306,
+   "v2_rescued": 3,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 23,
+   "tab_normalized_rows": 55,
+   "rejects": {
+    "bad_json": 568,
+    "no_audit_item": 125,
+    "missing_code_or_name": 0
+   }
+  },
+  "新闻广电.jsonl": {
+   "input": 5921,
+   "output": 5398,
+   "duplicates": 503,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 63,
+   "tab_normalized_rows": 98,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 20,
+    "missing_code_or_name": 0
+   }
+  },
+  "档案文物.jsonl": {
+   "input": 146,
+   "output": 42,
+   "duplicates": 102,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 2,
+    "missing_code_or_name": 0
+   }
+  },
+  "检验检疫.jsonl": {
+   "input": 199,
+   "output": 110,
+   "duplicates": 82,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 7,
+    "missing_code_or_name": 0
+   }
+  },
+  "民族宗教.jsonl": {
+   "input": 5173,
+   "output": 5148,
+   "duplicates": 9,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 32,
+   "tab_normalized_rows": 42,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 16,
+    "missing_code_or_name": 0
+   }
+  },
+  "水利水务.jsonl": {
+   "input": 15184,
+   "output": 13258,
+   "duplicates": 1309,
+   "v2_rescued": 4,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 582,
+   "tab_normalized_rows": 555,
+   "rejects": {
+    "bad_json": 568,
+    "no_audit_item": 49,
+    "missing_code_or_name": 0
+   }
+  },
+  "水务气象.jsonl": {
+   "input": 2065,
+   "output": 1727,
+   "duplicates": 329,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 58,
+   "tab_normalized_rows": 224,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 9,
+    "missing_code_or_name": 0
+   }
+  },
+  "法人注销.jsonl": {
+   "input": 7179,
+   "output": 3020,
+   "duplicates": 757,
+   "v2_rescued": 2,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 1,
+   "tab_normalized_rows": 10,
+   "rejects": {
+    "bad_json": 3266,
+    "no_audit_item": 136,
+    "missing_code_or_name": 0
+   }
+  },
+  "海关口岸.jsonl": {
+   "input": 85,
+   "output": 63,
+   "duplicates": 20,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 2,
+    "missing_code_or_name": 0
+   }
+  },
+  "涉外服务.jsonl": {
+   "input": 268,
+   "output": 46,
+   "duplicates": 76,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 1,
+   "rejects": {
+    "bad_json": 142,
+    "no_audit_item": 4,
+    "missing_code_or_name": 0
+   }
+  },
+  "环保绿化.jsonl": {
+   "input": 7156,
+   "output": 4492,
+   "duplicates": 2265,
+   "v2_rescued": 2,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 89,
+   "tab_normalized_rows": 27,
+   "rejects": {
+    "bad_json": 284,
+    "no_audit_item": 115,
+    "missing_code_or_name": 0
+   }
+  },
+  "知识产权.jsonl": {
+   "input": 2337,
+   "output": 2268,
+   "duplicates": 62,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 25,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 7,
+    "missing_code_or_name": 0
+   }
+  },
+  "破产注销.jsonl": {
+   "input": 3145,
+   "output": 723,
+   "duplicates": 1099,
+   "v2_rescued": 1,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 1278,
+    "no_audit_item": 45,
+    "missing_code_or_name": 0
+   }
+  },
+  "社会保障.jsonl": {
+   "input": 35474,
+   "output": 32508,
+   "duplicates": 2582,
+   "v2_rescued": 6,
+   "fallback_rescued": 1,
+   "html_normalized_rows": 1480,
+   "tab_normalized_rows": 197,
+   "rejects": {
+    "bad_json": 142,
+    "no_audit_item": 242,
+    "missing_code_or_name": 0
+   }
+  },
+  "科技创新.jsonl": {
+   "input": 709,
+   "output": 422,
+   "duplicates": 124,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 11,
+   "tab_normalized_rows": 10,
+   "rejects": {
+    "bad_json": 142,
+    "no_audit_item": 21,
+    "missing_code_or_name": 0
+   }
+  },
+  "立项审批.jsonl": {
+   "input": 4704,
+   "output": 2292,
+   "duplicates": 2141,
+   "v2_rescued": 6,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 23,
+   "tab_normalized_rows": 11,
+   "rejects": {
+    "bad_json": 142,
+    "no_audit_item": 129,
+    "missing_code_or_name": 0
+   }
+  },
+  "融资信贷.jsonl": {
+   "input": 224,
+   "output": 15,
+   "duplicates": 197,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 12,
+    "missing_code_or_name": 0
+   }
+  },
+  "设立变更.jsonl": {
+   "input": 36474,
+   "output": 18828,
+   "duplicates": 8329,
+   "v2_rescued": 25,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 308,
+   "tab_normalized_rows": 268,
+   "rejects": {
+    "bad_json": 8378,
+    "no_audit_item": 939,
+    "missing_code_or_name": 0
+   }
+  },
+  "财务税务.jsonl": {
+   "input": 19460,
+   "output": 17090,
+   "duplicates": 36,
+   "v2_rescued": 2,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 1460,
+   "tab_normalized_rows": 204,
+   "rejects": {
+    "bad_json": 2272,
+    "no_audit_item": 62,
+    "missing_code_or_name": 0
+   }
+  },
+  "质量技术.jsonl": {
+   "input": 3820,
+   "output": 572,
+   "duplicates": 2529,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 710,
+    "no_audit_item": 9,
+    "missing_code_or_name": 0
+   }
+  },
+  "质量检查.jsonl": {
+   "input": 1192,
+   "output": 840,
+   "duplicates": 341,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 25,
+   "tab_normalized_rows": 40,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 11,
+    "missing_code_or_name": 0
+   }
+  },
+  "资质认证.jsonl": {
+   "input": 6458,
+   "output": 4353,
+   "duplicates": 1506,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 50,
+   "tab_normalized_rows": 53,
+   "rejects": {
+    "bad_json": 568,
+    "no_audit_item": 31,
+    "missing_code_or_name": 0
+   }
+  },
+  "金融投资.jsonl": {
+   "input": 1368,
+   "output": 66,
+   "duplicates": 1297,
+   "v2_rescued": 0,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 0,
+   "tab_normalized_rows": 0,
+   "rejects": {
+    "bad_json": 0,
+    "no_audit_item": 5,
+    "missing_code_or_name": 0
+   }
+  },
+  "食品药品.jsonl": {
+   "input": 25211,
+   "output": 20814,
+   "duplicates": 1990,
+   "v2_rescued": 3,
+   "fallback_rescued": 0,
+   "html_normalized_rows": 64,
+   "tab_normalized_rows": 1099,
+   "rejects": {
+    "bad_json": 2272,
+    "no_audit_item": 135,
+    "missing_code_or_name": 0
+   }
+  }
+ },
+ "global": {
+  "input": 605280,
+  "output": 481357,
+  "duplicates": 56972,
+  "rejects": {
+   "bad_json": 60208,
+   "no_audit_item": 6743,
+   "missing_code_or_name": 0
+  },
+  "unique_items": 481357,
+  "cross_theme_dup_items": 46612,
+  "cross_theme_dup_rows": 54476,
+  "v2_rescued": 157,
+  "fallback_rescued": 5,
+  "html_normalized_rows": 18386,
+  "tab_normalized_rows": 8752,
+  "rejects_total": 66951
+ },
+ "fixes_applied": [
+  "HTML 规范化:html.unescape 解码实体;<br>→换行;白名单标签(p/div/span/img 等)删除",
+  "控制字符:\\t→单空格;删 \\x7f 及其余 C0(除 \\n)与 C1(0x80-0x9F)",
+  "v2 套餐服务(special_item_type=TC,小写键 schema)分支物化,编码取 id",
+  "ITEM_ID 缺失按 TASK_CODE→ROWGUID→NATION_TASK_CODE 兜底编码"
+ ],
+ "no_source_fields": [
+  "申请.材料.页数",
+  "来源.详情页URL",
+  "来源.官方详情JSON(按约定置空)",
+  "v2: 办理.办理环节/网上办理限制说明/办理结果.说明/有效期说明/常见问答(源数据恒空或无对应键)"
+ ],
+ "anomalies": {
+  "html_polluted_lines": "bad_json 中 _raw 以 '<' 开头的行为采集期 HTML 错误页",
+  "service_dept_law_empty": "SERVICE_DEPT_LAW/HANDLE_GUID/AUDIT_ITEM_CONDITION/AUDIT_MATERIAL_CONDITION/AUDIT_SPTL 恒空;法律依据取自 AUDIT_ITEM.LAW",
+  "tongyi_code_semantics": "TONGYI_CODE 为部门统一社会信用代码,非事项编码;编码取 ITEM_ID",
+  "v2_online_derived": "v2 记录 可网上办理 派生自 application_channel_text 是否含'网上办理'"
+ }
+}

@@ -1,0 +1,43 @@
+# ===== macOS =====
+.DS_Store
+
+# ===== 数据集（本地大体量，不入库）=====
+# 原始数据只读；清洗/归一化产物可由 cleaning/ 脚本重建
+data/
+
+# ===== 生成的大文件产物（可重建）=====
+# 试跑输出
+cleaning/trial/
+# adapter v1 产物（已被 csv_v2 取代）
+kg/pilot/csv/
+# adapter v0.2 产物，由 adapter.py 重建
+kg/pilot/csv_v2/
+# 由 sample_pilot.py(seed=42) + data/unified 重建
+kg/pilot/pilot_10000.jsonl
+# 适配器试跑输出
+kg/build/out_trial/
+
+# ===== 运行时 / 缓存 =====
+__pycache__/
+*.pyc
+# Python 3.10 虚拟环境
+kg/venv/
+# KGWriter/SPGTypeMapping diskcache（重跑前需清空）
+kg/pilot/GovAffair/builder/ckpt/
+# docker compose 数据卷（Neo4j/MySQL/MinIO 持久化数据）
+kg/deploy/volumes/
+.colima-tmp/
+
+# ===== 第三方源码参考克隆 =====
+# KAG 源码浅克隆（git clone 获取）
+kg/_ref/
+
+# ===== 日志 =====
+*.log
+
+# ===== agent 本地工作文件 =====
+.claude/
+.pi-subagents/
+
+# ===== 本地密钥（勿提交；模板见 .env.example）=====
+.env

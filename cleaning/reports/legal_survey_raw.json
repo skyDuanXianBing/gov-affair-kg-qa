@@ -1,0 +1,2639 @@
+{
+ "per_file_rows": {
+  "交通运输.jsonl": 300,
+  "设立变更.jsonl": 300,
+  "其他.jsonl": 300,
+  "食品药品.jsonl": 300,
+  "司法公证.jsonl": 300
+ },
+ "rows_total": 1500,
+ "tables_seen": {
+  "AUDIT_MATERIAL": 1172,
+  "AUDIT_ITEM_EXTEND": 1495,
+  "AUDIT_CATALOG_LOBBY": 1203,
+  "AUDIT_ITEM_RESULT": 1077,
+  "OTHER_GUIDES": 683,
+  "AUDIT_ITEM_FLOWSHEET": 1131,
+  "AUDIT_ITEM": 1495,
+  "AUDIT_ITEM_COUNTRY_CODE": 635,
+  "AUDIT_SPECIAL_TIME": 1495,
+  "AUDIT_OTHER_DEPT": 160,
+  "AUDIT_QA": 586,
+  "ZHONGJIE_SERVICE": 105,
+  "AUDIT_CHARGE": 30,
+  "AUDIT_ZCHJSXZ": 6
+ },
+ "fields": {
+  "<TOP_SCALAR>": {
+   "IS_JOINT": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "OTHER_GUIDES": {
+    "nonempty": 0,
+    "total": 782,
+    "rate": 0.0
+   },
+   "ZHONGJIE_SERVICE": {
+    "nonempty": 0,
+    "total": 1341,
+    "rate": 0.0
+   },
+   "errCode": {
+    "nonempty": 5,
+    "total": 5,
+    "rate": 1.0
+   },
+   "msg": {
+    "nonempty": 5,
+    "total": 5,
+    "rate": 1.0
+   },
+   "result": {
+    "nonempty": 5,
+    "total": 5,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_CATALOG_LOBBY": {
+   "ADDRESS": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "BELONGXIAQUCODE": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "DEPT_CODE": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "DIVISION_CODE": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "FILEID": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "MAPLINKS": {
+    "nonempty": 10,
+    "total": 2965,
+    "rate": 0.0034
+   },
+   "NAME": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "OPERATEDATE": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "ORG_NAME": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "OUGUID": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "ROWGUID": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "SORT_ORDER": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "TEL": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "TIME": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "TIME_DELAY_BUS": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "TOPWIN": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "TOPWIN_TEXT": {
+    "nonempty": 0,
+    "total": 2963,
+    "rate": 0.0
+   },
+   "WINDOWTYPE": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   },
+   "WINDOW_CODE": {
+    "nonempty": 3088,
+    "total": 3088,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_CHARGE": {
+   "BY_LAW": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "CHARGEID": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "DESC_EXPLAIN": {
+    "nonempty": 2,
+    "total": 31,
+    "rate": 0.0645
+   },
+   "DESC_LAW": {
+    "nonempty": 2,
+    "total": 31,
+    "rate": 0.0645
+   },
+   "FEE_NAME": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "FEE_ORG": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "FEE_STAND": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "FEE_TYPE": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "FEE_TYPE_TEXT": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "IS_DESC": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "IS_DESC_TEXT": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "ITEMGUID": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "ORDERNUM": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   },
+   "REMARK": {
+    "nonempty": 11,
+    "total": 31,
+    "rate": 0.3548
+   },
+   "ROWGUID": {
+    "nonempty": 31,
+    "total": 31,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_ITEM": {
+   "ACCEPT_CONDITION": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "AGENTS": {
+    "nonempty": 2,
+    "total": 1495,
+    "rate": 0.0013
+   },
+   "ANTICIPATE_DAY": {
+    "nonempty": 1345,
+    "total": 1495,
+    "rate": 0.8997
+   },
+   "ANTICIPATE_TYPE": {
+    "nonempty": 1380,
+    "total": 1495,
+    "rate": 0.9231
+   },
+   "ANTICIPATE_TYPE_TEXT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "AREACODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "AREA_CODE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "AUDIT_STATE": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "AUTH_TRUST_LEVEL": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "CANCELPLAN": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "CAN_CA_LOGIN": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "CAN_MOBILE_CA_LOGIN": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "CATALOGGUID": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CATALOG_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "CATALOG_ID": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CATANAME": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "CHARGENODE": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CHARGETYPE": {
+    "nonempty": 30,
+    "total": 1443,
+    "rate": 0.0208
+   },
+   "CHARGETYPE_TEXT": {
+    "nonempty": 30,
+    "total": 1443,
+    "rate": 0.0208
+   },
+   "CHN_ITEM_MAPPING": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CKBLLC": {
+    "nonempty": 828,
+    "total": 1477,
+    "rate": 0.5606
+   },
+   "CKBLLCT": {
+    "nonempty": 827,
+    "total": 1495,
+    "rate": 0.5532
+   },
+   "CKBLLCTGUID": {
+    "nonempty": 827,
+    "total": 1495,
+    "rate": 0.5532
+   },
+   "CRBJSXSM": {
+    "nonempty": 1485,
+    "total": 1493,
+    "rate": 0.9946
+   },
+   "DEPT_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "DEPT_NAME": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "DEPT_TYPE": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "EFFECTPLAN": {
+    "nonempty": 181,
+    "total": 1495,
+    "rate": 0.1211
+   },
+   "ENTRUST_NAME": {
+    "nonempty": 127,
+    "total": 1448,
+    "rate": 0.0877
+   },
+   "ENTRUST_ORG_TYSHXYDM": {
+    "nonempty": 127,
+    "total": 1448,
+    "rate": 0.0877
+   },
+   "FACTDEGREE_EXPLAIN": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "FDBLSXSM": {
+    "nonempty": 1372,
+    "total": 1488,
+    "rate": 0.922
+   },
+   "FEEBASIS": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "FLOW_CHART": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "HANDLE_TYPE": {
+    "nonempty": 1492,
+    "total": 1495,
+    "rate": 0.998
+   },
+   "HANDLE_TYPE_TEXT": {
+    "nonempty": 1492,
+    "total": 1495,
+    "rate": 0.998
+   },
+   "HFXS": {
+    "nonempty": 419,
+    "total": 1460,
+    "rate": 0.287
+   },
+   "ISANNOUNCED": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "ISIMPORTMULTIWINDOW": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "ISIMPORTONEWINDOW": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_ABSENCE_ACCEPT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_ABSENCE_RECEIVE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_BAYAREA_ENABLE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_BIANMIN": {
+    "nonempty": 303,
+    "total": 303,
+    "rate": 1.0
+   },
+   "IS_FAST_APPROVE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_FEE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_FEE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_FINGER": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_HASYW": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_HISTORY": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_HISTORY_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_LEVYWAIVER": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_LEVYWAIVER_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_LIMIT": {
+    "nonempty": 1192,
+    "total": 1192,
+    "rate": 1.0
+   },
+   "IS_LIMIT_TEXT": {
+    "nonempty": 1192,
+    "total": 1192,
+    "rate": 1.0
+   },
+   "IS_NEED_ENTRY": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_NOTIFY_PROMISE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_PERMISSION": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SIMPLEPUNISH": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "IS_TRUST_APPROVAL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_YISHENQING": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_YSQ": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "ITEMSOURCE": {
+    "nonempty": 1204,
+    "total": 1486,
+    "rate": 0.8102
+   },
+   "ITEM_GUIDANCE_STATE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "ITEM_ID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LAW": {
+    "nonempty": 1404,
+    "total": 1495,
+    "rate": 0.9391
+   },
+   "LEVY_KIND": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "LEVY_KIND_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "LINK_TEL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LINK_WAY": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LINK_WINDOW": {
+    "nonempty": 769,
+    "total": 1476,
+    "rate": 0.521
+   },
+   "LOGIN_URL": {
+    "nonempty": 1069,
+    "total": 1482,
+    "rate": 0.7213
+   },
+   "MATERIAL_GUIDANCE_STATE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "MOBILE_APPLT_WEBSITE": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "NATION_CATALOG_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "NATION_TASK_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "NEW_SCOPES": {
+    "nonempty": 1182,
+    "total": 1495,
+    "rate": 0.7906
+   },
+   "ONLINECHECK": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "ONLINECHECK_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "PAR_DEPT_NAME": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "PAR_ITEM_ID": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "PAR_TASK_CODE": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "PAR_TASK_NAME": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "PAR_TONGYI_CODE": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "PROJECT_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "PROJECT_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "PROMISE_DAY": {
+    "nonempty": 1493,
+    "total": 1495,
+    "rate": 0.9987
+   },
+   "PROMISE_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "PROMISE_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "PUBLISHDATE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "QXHFSM": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "QXHFSM1": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "QXHFSM2": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "QXHFSM3": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "QXHFSM4": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "ROWGUID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SCOPES": {
+    "nonempty": 1182,
+    "total": 1495,
+    "rate": 0.7906
+   },
+   "SERVE_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SERVE_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SUPERVISE_WAY": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "SYSTEMTYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_ITEMID": {
+    "nonempty": 718,
+    "total": 1467,
+    "rate": 0.4894
+   },
+   "TASK_LAW": {
+    "nonempty": 361,
+    "total": 1495,
+    "rate": 0.2415
+   },
+   "TASK_NAME": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_STATE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_STATE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TASK_VERSION": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TONGYI_CODE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TRANSACT_ADDR": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "TRANSACT_APP_URL": {
+    "nonempty": 118,
+    "total": 1447,
+    "rate": 0.0815
+   },
+   "TRANSACT_TIME": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "TRANSACT_WEB_URL": {
+    "nonempty": 1433,
+    "total": 1495,
+    "rate": 0.9585
+   },
+   "TSCKADDRESS": {
+    "nonempty": 673,
+    "total": 1469,
+    "rate": 0.4581
+   },
+   "TSDZYX": {
+    "nonempty": 272,
+    "total": 1457,
+    "rate": 0.1867
+   },
+   "TSTEL": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "UNONLINEREASONOTHER": {
+    "nonempty": 104,
+    "total": 1445,
+    "rate": 0.072
+   },
+   "USE_LEVEL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "USE_LEVEL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "VERSION_DATE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "WBSD_LEVEL": {
+    "nonempty": 1379,
+    "total": 1490,
+    "rate": 0.9255
+   },
+   "WBSD_LEVEL_TEXT": {
+    "nonempty": 1379,
+    "total": 1490,
+    "rate": 0.9255
+   },
+   "WEB_OLDBB_PARAM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WEB_OLDBM_PARAM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WEB_TASKCODE_PARAM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WEB_TASKVERSION_PARAM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WSBLLC": {
+    "nonempty": 1433,
+    "total": 1495,
+    "rate": 0.9585
+   },
+   "WSBLLCT": {
+    "nonempty": 1433,
+    "total": 1495,
+    "rate": 0.9585
+   },
+   "WSBLLCTGUID": {
+    "nonempty": 1433,
+    "total": 1495,
+    "rate": 0.9585
+   },
+   "WSTSWZ": {
+    "nonempty": 474,
+    "total": 1460,
+    "rate": 0.3247
+   },
+   "XHTSDZ": {
+    "nonempty": 649,
+    "total": 1466,
+    "rate": 0.4427
+   },
+   "YEAR": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "YW_CODE": {
+    "nonempty": 718,
+    "total": 1467,
+    "rate": 0.4894
+   },
+   "YW_NAME": {
+    "nonempty": 718,
+    "total": 1495,
+    "rate": 0.4803
+   },
+   "chinasyncstatus": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "chinatstime": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   }
+  },
+  "AUDIT_ITEM_COUNTRY_CODE": {
+   "BYLAW_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "CHILD_AUDIT_ITEM": {
+    "nonempty": 0,
+    "total": 715,
+    "rate": 0.0
+   },
+   "CODE_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "CODE_S": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "COUNTRYCODE": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "IS_HISTORY": {
+    "nonempty": 0,
+    "total": 685,
+    "rate": 0.0
+   },
+   "IS_JOINT_CHILD": {
+    "nonempty": 0,
+    "total": 715,
+    "rate": 0.0
+   },
+   "ITEM_ID": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "OUGUID": {
+    "nonempty": 0,
+    "total": 685,
+    "rate": 0.0
+   },
+   "ROWGUID": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "TASKCODE_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "TASKNAME_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "TASKTYPE_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "YWCODE": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   },
+   "YWCODE_G": {
+    "nonempty": 715,
+    "total": 715,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_ITEM_EXTEND": {
+   "APPISSINGLELOGIN": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "APPLY_NOTICE": {
+    "nonempty": 14,
+    "total": 1444,
+    "rate": 0.0097
+   },
+   "APPOINTMENT_URL": {
+    "nonempty": 484,
+    "total": 1461,
+    "rate": 0.3313
+   },
+   "APP_URL": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "BANOTE": {
+    "nonempty": 187,
+    "total": 1455,
+    "rate": 0.1285
+   },
+   "BIZ_CYCLE": {
+    "nonempty": 76,
+    "total": 1445,
+    "rate": 0.0526
+   },
+   "BMKCJBLSXHF": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CJSQDM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CJSQMC": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "CKBLJCCX": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "COMMONEXPRESSION": {
+    "nonempty": 356,
+    "total": 1457,
+    "rate": 0.2443
+   },
+   "EXTEND": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "EXTENSION_FIELD": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "FBSJ": {
+    "nonempty": 1489,
+    "total": 1495,
+    "rate": 0.996
+   },
+   "FINGER_SERVICE": {
+    "nonempty": 298,
+    "total": 1483,
+    "rate": 0.2009
+   },
+   "FLXL": {
+    "nonempty": 365,
+    "total": 1454,
+    "rate": 0.251
+   },
+   "FQFX": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "FZCD": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "FZCD_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "HANDLE_AREA": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "HANDLE_AREA_TEXT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "HANDLE_RATE": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "INTERMEDIARYSERVICES": {
+    "nonempty": 105,
+    "total": 1495,
+    "rate": 0.0702
+   },
+   "INTERMEDIARYSERVICESCODE": {
+    "nonempty": 105,
+    "total": 1495,
+    "rate": 0.0702
+   },
+   "ISSINGLELOGIN": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_ABSENCE_ACCEPT": {
+    "nonempty": 1393,
+    "total": 1490,
+    "rate": 0.9349
+   },
+   "IS_BFXF": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "IS_BFXF_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_DJ": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_DJ_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_QH": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_QH_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_SJZB": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_CONTAIN_SJZB_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_CONTAIN_SQBH": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_SQBH_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_TSSC": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_CONTAIN_TSSC_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_CONTAIN_YY": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_CONTAIN_YY_TEXT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_CONTAIN_ZJZZ": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_CONTAIN_ZJZZ_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_ENTRY_CENTER": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_ENTRY_CENTER_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_EXPRESS": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_EXPRESS_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_LIMIT": {
+    "nonempty": 1192,
+    "total": 1486,
+    "rate": 0.8022
+   },
+   "IS_LIMIT_TEXT": {
+    "nonempty": 1192,
+    "total": 1486,
+    "rate": 0.8022
+   },
+   "IS_NOTIFY_PROMISE": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_OTHER_DEPT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_OTHER_DEPT_TEXT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_PAY_ONLINE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_PAY_ONLINE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_QZXZXK": {
+    "nonempty": 879,
+    "total": 1473,
+    "rate": 0.5967
+   },
+   "IS_QZXZXK_TEXT": {
+    "nonempty": 879,
+    "total": 1473,
+    "rate": 0.5967
+   },
+   "IS_SCHEDULE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SCHEDULE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SFYZCA": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SFYZCA_TEXT": {
+    "nonempty": 645,
+    "total": 1462,
+    "rate": 0.4412
+   },
+   "IS_SPECIALPROGRAME": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SUPPORT_ZDBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SUPPORT_ZDBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_SW": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_SW_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_TGJDCXFW": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_TGJDCXFW_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_TGJGCXFW": {
+    "nonempty": 841,
+    "total": 1472,
+    "rate": 0.5713
+   },
+   "IS_TGJGCXFW_TEXT": {
+    "nonempty": 841,
+    "total": 1472,
+    "rate": 0.5713
+   },
+   "IS_WSZXFW": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_WSZXFW_TEXT": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "IS_WT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_WT_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "IS_XYSFYZ": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "IS_XYSFYZ_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "JDCXADDRESS": {
+    "nonempty": 730,
+    "total": 1475,
+    "rate": 0.4949
+   },
+   "JDJCFS": {
+    "nonempty": 320,
+    "total": 1455,
+    "rate": 0.2199
+   },
+   "JFADDRESS": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "JFTIME": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "JGCXADDRESS": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "KSIMC": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "LEGAL_PLACE_THEME": {
+    "nonempty": 12,
+    "total": 1443,
+    "rate": 0.0083
+   },
+   "LEGAL_THEME": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LIMIT_EXPLAIN": {
+    "nonempty": 1192,
+    "total": 1486,
+    "rate": 0.8022
+   },
+   "LIMIT_SCENE_EXPLAIN": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LIMIT_SCENE_NUM": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LIMIT_SCENE_NUM_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "LINKADDR": {
+    "nonempty": 1069,
+    "total": 1482,
+    "rate": 0.7213
+   },
+   "MOBILETERMINALURL": {
+    "nonempty": 118,
+    "total": 1447,
+    "rate": 0.0815
+   },
+   "NBXKLCSM": {
+    "nonempty": 372,
+    "total": 1459,
+    "rate": 0.255
+   },
+   "NBXKLCT": {
+    "nonempty": 396,
+    "total": 1495,
+    "rate": 0.2649
+   },
+   "OTHER_DEPT": {
+    "nonempty": 160,
+    "total": 1495,
+    "rate": 0.107
+   },
+   "PERSON_PLACE_THEME": {
+    "nonempty": 8,
+    "total": 1443,
+    "rate": 0.0055
+   },
+   "PERSON_THEME": {
+    "nonempty": 442,
+    "total": 1458,
+    "rate": 0.3032
+   },
+   "QZHF_CITY": {
+    "nonempty": 87,
+    "total": 1478,
+    "rate": 0.0589
+   },
+   "QZHF_COUNTY": {
+    "nonempty": 33,
+    "total": 1478,
+    "rate": 0.0223
+   },
+   "QZHF_PROVINCE": {
+    "nonempty": 84,
+    "total": 1478,
+    "rate": 0.0568
+   },
+   "QZHF_STATE": {
+    "nonempty": 6,
+    "total": 1478,
+    "rate": 0.0041
+   },
+   "QZXKSX": {
+    "nonempty": 1,
+    "total": 1443,
+    "rate": 0.0007
+   },
+   "QZXKYJ": {
+    "nonempty": 1,
+    "total": 1493,
+    "rate": 0.0007
+   },
+   "RESULTGUID": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "RESULT_GUID": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "RESULT_NAME": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "RESULT_TYPE": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "RESULT_TYPE_TEXT": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "ROWGUID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SCBLSM": {
+    "nonempty": 104,
+    "total": 1445,
+    "rate": 0.072
+   },
+   "SCENE_REASON": {
+    "nonempty": 104,
+    "total": 1445,
+    "rate": 0.072
+   },
+   "SERVICE_DEPT": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "SERVICE_TYPE": {
+    "nonempty": 1408,
+    "total": 1492,
+    "rate": 0.9437
+   },
+   "SERVICE_TYPE_TEXT": {
+    "nonempty": 1408,
+    "total": 1492,
+    "rate": 0.9437
+   },
+   "SFDBMDKSBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDBMDKSBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDBMKCJBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDBMKCJBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDBMKKSBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDBMKKSBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDCJKBMBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFDCJKBMBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFKBMKCJBL": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SFKBMKCJBL_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SKBMMC": {
+    "nonempty": 160,
+    "total": 1495,
+    "rate": 0.107
+   },
+   "SKCJ": {
+    "nonempty": 160,
+    "total": 1495,
+    "rate": 0.107
+   },
+   "SKCJHBM": {
+    "nonempty": 160,
+    "total": 1495,
+    "rate": 0.107
+   },
+   "SKKSMC": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "SLSX": {
+    "nonempty": 273,
+    "total": 1495,
+    "rate": 0.1826
+   },
+   "SLSXDW": {
+    "nonempty": 1380,
+    "total": 1495,
+    "rate": 0.9231
+   },
+   "SLSXDW_TEXT": {
+    "nonempty": 1380,
+    "total": 1495,
+    "rate": 0.9231
+   },
+   "SLSXSM": {
+    "nonempty": 258,
+    "total": 1453,
+    "rate": 0.1776
+   },
+   "SORTITEMNAME": {
+    "nonempty": 279,
+    "total": 1450,
+    "rate": 0.1924
+   },
+   "SPECIAL_FLOW_NOTE": {
+    "nonempty": 163,
+    "total": 1450,
+    "rate": 0.1124
+   },
+   "SQNR": {
+    "nonempty": 689,
+    "total": 1470,
+    "rate": 0.4687
+   },
+   "SQRQL": {
+    "nonempty": 836,
+    "total": 1472,
+    "rate": 0.5679
+   },
+   "SQRYW": {
+    "nonempty": 836,
+    "total": 1472,
+    "rate": 0.5679
+   },
+   "SQSX": {
+    "nonempty": 33,
+    "total": 1495,
+    "rate": 0.0221
+   },
+   "SQSXDW": {
+    "nonempty": 1380,
+    "total": 1495,
+    "rate": 0.9231
+   },
+   "SQSXDW_TEXT": {
+    "nonempty": 1380,
+    "total": 1495,
+    "rate": 0.9231
+   },
+   "SQSXSM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "SSJGWZ": {
+    "nonempty": 509,
+    "total": 1462,
+    "rate": 0.3482
+   },
+   "STAR_SERVICE": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "TASK_GUID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "THEME_CUSTOM_TYPE": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "THEME_CUSTOM_TYPE_TEXT": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "THEME_LEGAL_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "THEME_LEGAL_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "THEME_NATURAL_TYPE": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "THEME_NATURAL_TYPE_TEXT": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "TSCXZSX": {
+    "nonempty": 316,
+    "total": 1455,
+    "rate": 0.2172
+   },
+   "TSCXZSXSM": {
+    "nonempty": 228,
+    "total": 1453,
+    "rate": 0.1569
+   },
+   "TSSC_TYPE": {
+    "nonempty": 349,
+    "total": 1495,
+    "rate": 0.2334
+   },
+   "TSSC_TYPE_TEXT": {
+    "nonempty": 349,
+    "total": 1456,
+    "rate": 0.2397
+   },
+   "TYPE": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "UNONLINEREASON": {
+    "nonempty": 104,
+    "total": 1445,
+    "rate": 0.072
+   },
+   "WCKSM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WSFWSD": {
+    "nonempty": 1379,
+    "total": 1490,
+    "rate": 0.9255
+   },
+   "WSQRTGBZ": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WSZXDZ": {
+    "nonempty": 509,
+    "total": 1462,
+    "rate": 0.3482
+   },
+   "WTBM": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "WTFX": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "XKDX": {
+    "nonempty": 552,
+    "total": 1467,
+    "rate": 0.3763
+   },
+   "XKSXBM": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "XKZJ_TYPE": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "XKZJ_TYPE_TEXT": {
+    "nonempty": 1077,
+    "total": 1480,
+    "rate": 0.7277
+   },
+   "XKZXZZQX": {
+    "nonempty": 327,
+    "total": 1455,
+    "rate": 0.2247
+   },
+   "XSNR": {
+    "nonempty": 83,
+    "total": 1445,
+    "rate": 0.0574
+   },
+   "XTCJ": {
+    "nonempty": 1258,
+    "total": 1490,
+    "rate": 0.8443
+   },
+   "XTCJ_TEXT": {
+    "nonempty": 1258,
+    "total": 1490,
+    "rate": 0.8443
+   },
+   "XTMC": {
+    "nonempty": 1347,
+    "total": 1490,
+    "rate": 0.904
+   },
+   "XZFYBM": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZFYDH": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZFYDZ": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZFYWZ": {
+    "nonempty": 816,
+    "total": 1472,
+    "rate": 0.5543
+   },
+   "XZJDDM": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "XZJDMC": {
+    "nonempty": 64,
+    "total": 1446,
+    "rate": 0.0443
+   },
+   "XZSSBM": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZSSDH": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZSSDZ": {
+    "nonempty": 1380,
+    "total": 1490,
+    "rate": 0.9262
+   },
+   "XZSSWZ": {
+    "nonempty": 897,
+    "total": 1475,
+    "rate": 0.6081
+   },
+   "YQSM": {
+    "nonempty": 369,
+    "total": 1454,
+    "rate": 0.2538
+   },
+   "YXQ": {
+    "nonempty": 391,
+    "total": 1454,
+    "rate": 0.2689
+   },
+   "ZXCKADDRESS": {
+    "nonempty": 769,
+    "total": 1476,
+    "rate": 0.521
+   },
+   "ZXDZYX": {
+    "nonempty": 272,
+    "total": 1454,
+    "rate": 0.1871
+   },
+   "ZXGZCX": {
+    "nonempty": 324,
+    "total": 1455,
+    "rate": 0.2227
+   },
+   "ZXHFBM": {
+    "nonempty": 302,
+    "total": 1454,
+    "rate": 0.2077
+   },
+   "ZXHFSXXS": {
+    "nonempty": 401,
+    "total": 1457,
+    "rate": 0.2752
+   },
+   "ZXWXH": {
+    "nonempty": 414,
+    "total": 1460,
+    "rate": 0.2836
+   },
+   "ZXXHYJDZ": {
+    "nonempty": 605,
+    "total": 1465,
+    "rate": 0.413
+   },
+   "ZXYZBM": {
+    "nonempty": 557,
+    "total": 1465,
+    "rate": 0.3802
+   },
+   "ZXZWWBWZ": {
+    "nonempty": 402,
+    "total": 1460,
+    "rate": 0.2753
+   },
+   "ZZTYPE": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   }
+  },
+  "AUDIT_ITEM_FLOWSHEET": {
+   "CHECK_STANDARD": {
+    "nonempty": 4096,
+    "total": 4096,
+    "rate": 1.0
+   },
+   "IS_CHOOSE_STEP": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "ITEM_CODE": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "ITEM_TYPE": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "STEP": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "STEP_TEXT": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "TRANSACTOR": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "TRANSACT_RESULT": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "TRANSACT_TIME_LIMIT": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "TRANSPORT_TYPE": {
+    "nonempty": 1945,
+    "total": 1945,
+    "rate": 1.0
+   },
+   "UNTI_LINK": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   },
+   "UNTI_LINK_TEXT": {
+    "nonempty": 6041,
+    "total": 6041,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_ITEM_RESULT": {
+   "CARD_VALIDDATE": {
+    "nonempty": 393,
+    "total": 1135,
+    "rate": 0.3463
+   },
+   "EMPTYATTACHLIST": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "HOLDER_TYPE": {
+    "nonempty": 549,
+    "total": 1145,
+    "rate": 0.4795
+   },
+   "ISRELATELICENS": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "ISRELATELICENSE": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "ISSUE_LEVEL": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "ITEM_ID": {
+    "nonempty": 1139,
+    "total": 1139,
+    "rate": 1.0
+   },
+   "LICENSE_CODE": {
+    "nonempty": 556,
+    "total": 1144,
+    "rate": 0.486
+   },
+   "LICENSE_NAME": {
+    "nonempty": 556,
+    "total": 1144,
+    "rate": 0.486
+   },
+   "NAME": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESULTATTACHLIST": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESULT_BLANK": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESULT_LAWDATE": {
+    "nonempty": 366,
+    "total": 1135,
+    "rate": 0.3225
+   },
+   "RESULT_SAMPLE": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESULT_SERVICE_TYPE": {
+    "nonempty": 0,
+    "total": 1124,
+    "rate": 0.0
+   },
+   "RESULT_TYPE": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESULT_TYPE_TEXT": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "RESUL_EXPLAIN": {
+    "nonempty": 370,
+    "total": 1135,
+    "rate": 0.326
+   },
+   "ROWGUID": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "SHORT_NAME": {
+    "nonempty": 213,
+    "total": 1135,
+    "rate": 0.1877
+   },
+   "SORTORDER": {
+    "nonempty": 0,
+    "total": 1124,
+    "rate": 0.0
+   },
+   "SUBJECTID": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "SUBJECT_RESULT_TYPE": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   },
+   "SUBJECT_RESULT_TYPE_TEXT": {
+    "nonempty": 1161,
+    "total": 1161,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_MATERIAL": {
+   "ACCEPT_STAND": {
+    "nonempty": 778,
+    "total": 5648,
+    "rate": 0.1377
+   },
+   "AGENTS": {
+    "nonempty": 19,
+    "total": 5832,
+    "rate": 0.0033
+   },
+   "BY_LAW": {
+    "nonempty": 570,
+    "total": 5832,
+    "rate": 0.0977
+   },
+   "DOCUMENT_TYPE": {
+    "nonempty": 939,
+    "total": 5659,
+    "rate": 0.1659
+   },
+   "EXAMPLEGUID": {
+    "nonempty": 5452,
+    "total": 5832,
+    "rate": 0.9348
+   },
+   "EXAMPLE_GUID": {
+    "nonempty": 3287,
+    "total": 5832,
+    "rate": 0.5636
+   },
+   "FILE_EXPLIAN": {
+    "nonempty": 3415,
+    "total": 5780,
+    "rate": 0.5908
+   },
+   "FILL_EXPLIAN": {
+    "nonempty": 3415,
+    "total": 5780,
+    "rate": 0.5908
+   },
+   "FORM_GUID": {
+    "nonempty": 2730,
+    "total": 5832,
+    "rate": 0.4681
+   },
+   "FROMGUID": {
+    "nonempty": 5430,
+    "total": 5832,
+    "rate": 0.9311
+   },
+   "INTERMEDIARYSERVICES": {
+    "nonempty": 0,
+    "total": 5621,
+    "rate": 0.0
+   },
+   "INTERMEDIARYSERVICESCODE": {
+    "nonempty": 0,
+    "total": 5621,
+    "rate": 0.0
+   },
+   "ISRELATELICENSE": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "ISRELATELICENSE_TEXT": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "IS_NEED": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "IS_NEED_TEXT": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "ITEMGUID": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "MATERIALID": {
+    "nonempty": 5765,
+    "total": 5832,
+    "rate": 0.9885
+   },
+   "MATERIALNECESSITYDESC": {
+    "nonempty": 0,
+    "total": 5621,
+    "rate": 0.0
+   },
+   "MATERIAL_DESC": {
+    "nonempty": 746,
+    "total": 5637,
+    "rate": 0.1323
+   },
+   "MATERIAL_NAME": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "MATERIAL_TYPE": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "MATERIAL_TYPE_TEXT": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "ORDERNUM": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "PAGE_COPYNUM": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "PAGE_FORMAT": {
+    "nonempty": 3211,
+    "total": 5757,
+    "rate": 0.5578
+   },
+   "PAGE_NUM": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "REMARK": {
+    "nonempty": 1430,
+    "total": 5666,
+    "rate": 0.2524
+   },
+   "ROWGUID": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "SOURCE_EXPLAIN": {
+    "nonempty": 1867,
+    "total": 5686,
+    "rate": 0.3284
+   },
+   "SOURCE_TYPE": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "SOURCE_TYPE_TEXT": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "SUBMISSIONMEASURE": {
+    "nonempty": 1175,
+    "total": 5656,
+    "rate": 0.2077
+   },
+   "SUBMISSIONREQUIRED": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "ZZHDZB": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   },
+   "ZZHDZB_TEXT": {
+    "nonempty": 5832,
+    "total": 5832,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_OTHER_DEPT": {
+   "OTHERDEPTNAME": {
+    "nonempty": 361,
+    "total": 361,
+    "rate": 1.0
+   },
+   "STEP": {
+    "nonempty": 361,
+    "total": 361,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_QA": {
+   "ANSWER": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   },
+   "ITEMGUID": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   },
+   "ORDERNUM": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   },
+   "QAID": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   },
+   "QUESTION": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   },
+   "ROWGUID": {
+    "nonempty": 2110,
+    "total": 2110,
+    "rate": 1.0
+   }
+  },
+  "AUDIT_SPECIAL_TIME": {
+   "ITEMGUID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "OTHERNAME": {
+    "nonempty": 0,
+    "total": 1443,
+    "rate": 0.0
+   },
+   "ROWGUID": {
+    "nonempty": 1495,
+    "total": 1495,
+    "rate": 1.0
+   },
+   "SHIXIAN": {
+    "nonempty": 316,
+    "total": 1455,
+    "rate": 0.2172
+   },
+   "SPECIALNAME": {
+    "nonempty": 349,
+    "total": 1456,
+    "rate": 0.2397
+   },
+   "SX": {
+    "nonempty": 316,
+    "total": 1455,
+    "rate": 0.2172
+   },
+   "SXDW": {
+    "nonempty": 369,
+    "total": 1456,
+    "rate": 0.2534
+   },
+   "SXDW_TEXT": {
+    "nonempty": 369,
+    "total": 1456,
+    "rate": 0.2534
+   },
+   "TJROWGUID": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "TJSSQDGUID": {
+    "nonempty": 0,
+    "total": 1495,
+    "rate": 0.0
+   },
+   "TYPE": {
+    "nonempty": 349,
+    "total": 1495,
+    "rate": 0.2334
+   }
+  },
+  "AUDIT_ZCHJSXZ": {
+   "BBJG": {
+    "nonempty": 1,
+    "total": 11,
+    "rate": 0.0909
+   },
+   "BBSJ": {
+    "nonempty": 1,
+    "total": 11,
+    "rate": 0.0909
+   },
+   "ITEMGUID": {
+    "nonempty": 11,
+    "total": 11,
+    "rate": 1.0
+   },
+   "NAME": {
+    "nonempty": 1,
+    "total": 11,
+    "rate": 0.0909
+   },
+   "ROWGUID": {
+    "nonempty": 11,
+    "total": 11,
+    "rate": 1.0
+   },
+   "SPTJID": {
+    "nonempty": 11,
+    "total": 11,
+    "rate": 1.0
+   },
+   "TYPE": {
+    "nonempty": 11,
+    "total": 11,
+    "rate": 1.0
+   },
+   "TYPE_TEXT": {
+    "nonempty": 11,
+    "total": 11,
+    "rate": 1.0
+   }
+  },
+  "OTHER_GUIDES": {
+   "YW_CODE": {
+    "nonempty": 5140,
+    "total": 5140,
+    "rate": 1.0
+   },
+   "YW_NAME": {
+    "nonempty": 5140,
+    "total": 5140,
+    "rate": 1.0
+   }
+  },
+  "ZHONGJIE_SERVICE": {
+   "INTERMEDIARYSERVICES": {
+    "nonempty": 105,
+    "total": 105,
+    "rate": 1.0
+   },
+   "INTERMEDIARYSERVICESCODE": {
+    "nonempty": 105,
+    "total": 105,
+    "rate": 1.0
+   },
+   "JOINT": {
+    "nonempty": 0,
+    "total": 105,
+    "rate": 0.0
+   }
+  }
+ },
+ "code_text": {
+  "AUDIT_CHARGE": {
+   "FEE_TYPE": {
+    "1": [
+     "行政事业性收费"
+    ]
+   },
+   "IS_DESC": {
+    "0": [
+     "否"
+    ],
+    "1": [
+     "是"
+    ]
+   }
+  },
+  "AUDIT_ITEM_FLOWSHEET": {
+   "STEP": {
+    "acceptance": [
+     "受理"
+    ],
+    "accreditation": [
+     "制证"
+    ],
+    "addressee": [
+     "收件"
+    ],
+    "decide": [
+     "决定"
+    ],
+    "delivery": [
+     "送达"
+    ],
+    "investigate": [
+     "审查"
+    ]
+   },
+   "UNTI_LINK": {
+    "ConfermentAndService": [
+     "颁证与送达"
+    ],
+    "applitAndAccept": [
+     "申请与受理"
+    ],
+    "reviewAndDecision": [
+     "审查与决定"
+    ]
+   }
+  },
+  "AUDIT_ITEM_RESULT": {
+   "RESULT_TYPE": {
+    "APPROVAL": [
+     "批文批复"
+    ],
+    "AUTHENTICATION_REPORT": [
+     "鉴定报告"
+    ],
+    "CERTIFICATE": [
+     "证件执照"
+    ],
+    "PROOF": [
+     "证明文件"
+    ],
+    "WORK_RESULT": [
+     "其他文件"
+    ]
+   },
+   "SUBJECT_RESULT_TYPE": {
+    "10": [
+     "证照"
+    ],
+    "20": [
+     "批文"
+    ],
+    "30": [
+     "其他"
+    ]
+   }
+  },
+  "AUDIT_MATERIAL": {
+   "ISRELATELICENSE": {
+    "0": [
+     "否"
+    ],
+    "1": [
+     "是"
+    ]
+   },
+   "IS_NEED": {
+    "1": [
+     "必要"
+    ],
+    "2": [
+     "非必要"
+    ],
+    "3": [
+     "容缺后补"
+    ]
+   },
+   "MATERIAL_TYPE": {
+    "1": [
+     "证件证书证明"
+    ],
+    "2": [
+     "申请表格文书"
+    ],
+    "3": [
+     "其他"
+    ]
+   },
+   "SOURCE_TYPE": {
+    "10": [
+     "申请人自备"
+    ],
+    "20": [
+     "政府部门核发"
+    ],
+    "99": [
+     "其他"
+    ]
+   },
+   "ZZHDZB": {
+    "1": [
+     "纸质"
+    ],
+    "2": [
+     "电子化"
+    ],
+    "3": [
+     "纸质/电子化"
+    ]
+   }
+  },
+  "AUDIT_SPECIAL_TIME": {
+   "SXDW": {
+    "G": [
+     "工作日"
+    ],
+    "Z": [
+     "自然日"
+    ]
+   }
+  },
+  "AUDIT_ZCHJSXZ": {
+   "TYPE": {
+    "1": [
+     "业务描述"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,406 @@
+{
+  "dataset": "个人服务",
+  "mode": "full",
+  "generated_at": "2026-08-09 13:21:34",
+  "duration_seconds": 406.6,
+  "global": {
+    "input_lines": 1090700,
+    "output_records": 1090612,
+    "rejected": 0,
+    "duplicates": 88,
+    "distinct_dedup_keys": 1090612,
+    "reject_reasons": {},
+    "schema_version_counts": {
+      "gdzwfw-large-human-readable-v1": 1090700
+    },
+    "unexpected_top_keys": {},
+    "normalization_impact_records": {
+      "html": 1796,
+      "tab": 7089,
+      "ctrl": 24
+    }
+  },
+  "shards": [
+    {
+      "shard": "000000001-000050000.jsonl",
+      "input": 49512,
+      "output": 49442,
+      "rejected": 0,
+      "duplicates": 70
+    },
+    {
+      "shard": "000050001-000100000.jsonl",
+      "input": 49668,
+      "output": 49650,
+      "rejected": 0,
+      "duplicates": 18
+    },
+    {
+      "shard": "000100001-000150000.jsonl",
+      "input": 49430,
+      "output": 49430,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000150001-000200000.jsonl",
+      "input": 49429,
+      "output": 49429,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000200001-000250000.jsonl",
+      "input": 49771,
+      "output": 49771,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000250001-000300000.jsonl",
+      "input": 49817,
+      "output": 49817,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000300001-000350000.jsonl",
+      "input": 49790,
+      "output": 49790,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000350001-000400000.jsonl",
+      "input": 49861,
+      "output": 49861,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000400001-000450000.jsonl",
+      "input": 49830,
+      "output": 49830,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000450001-000500000.jsonl",
+      "input": 49788,
+      "output": 49788,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000500001-000550000.jsonl",
+      "input": 49709,
+      "output": 49709,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000550001-000600000.jsonl",
+      "input": 49747,
+      "output": 49747,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000600001-000650000.jsonl",
+      "input": 49790,
+      "output": 49790,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000650001-000700000.jsonl",
+      "input": 49612,
+      "output": 49612,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000700001-000750000.jsonl",
+      "input": 49524,
+      "output": 49524,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000750001-000800000.jsonl",
+      "input": 49533,
+      "output": 49533,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000800001-000850000.jsonl",
+      "input": 49511,
+      "output": 49511,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000850001-000900000.jsonl",
+      "input": 50000,
+      "output": 50000,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000900001-000950000.jsonl",
+      "input": 49711,
+      "output": 49711,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "000950001-001000000.jsonl",
+      "input": 49440,
+      "output": 49440,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "001000001-001050000.jsonl",
+      "input": 49994,
+      "output": 49994,
+      "rejected": 0,
+      "duplicates": 0
+    },
+    {
+      "shard": "001050001-001100000.jsonl",
+      "input": 47233,
+      "output": 47233,
+      "rejected": 0,
+      "duplicates": 0
+    }
+  ],
+  "duplicates": {
+    "total": 88,
+    "distinct_keys": 88,
+    "top20_by_occurrences": [
+      {
+        "dedup_key": "11440000006939756B244210104C002",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "11440000006939756B244210104C007",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057049",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057018",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057171",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057111",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057041",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057188",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057140",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057133",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057116",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057010",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057055",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057077",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057175",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057161",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057192",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057036",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057002",
+        "occurrences": 2
+      },
+      {
+        "dedup_key": "1144000000694016742442109057130",
+        "occurrences": 2
+      }
+    ]
+  },
+  "field_empty_rate_top20": [
+    {
+      "path": ".办理.办理地址",
+      "total": 1090612,
+      "empty": 1090612,
+      "empty_rate": 1.0
+    },
+    {
+      "path": ".办理结果.说明",
+      "total": 558996,
+      "empty": 539809,
+      "empty_rate": 0.965676
+    },
+    {
+      "path": ".办理.网上办理限制说明",
+      "total": 1090612,
+      "empty": 981772,
+      "empty_rate": 0.900203
+    },
+    {
+      "path": ".常见问答",
+      "total": 1090612,
+      "empty": 980104,
+      "empty_rate": 0.898673
+    },
+    {
+      "path": ".事项.详情返回编码",
+      "total": 1090612,
+      "empty": 899732,
+      "empty_rate": 0.824979
+    },
+    {
+      "path": ".办理结果.有效期说明",
+      "total": 558996,
+      "empty": 440645,
+      "empty_rate": 0.788279
+    },
+    {
+      "path": ".申请.材料.说明",
+      "total": 4201120,
+      "empty": 2418989,
+      "empty_rate": 0.575796
+    },
+    {
+      "path": ".办理结果",
+      "total": 1090612,
+      "empty": 627291,
+      "empty_rate": 0.575173
+    },
+    {
+      "path": ".申请.材料.公开附件",
+      "total": 4201120,
+      "empty": 2107950,
+      "empty_rate": 0.501759
+    },
+    {
+      "path": ".办理.办理环节",
+      "total": 1090612,
+      "empty": 547056,
+      "empty_rate": 0.501605
+    },
+    {
+      "path": ".办理.跨域通办",
+      "total": 1090612,
+      "empty": 463819,
+      "empty_rate": 0.425283
+    },
+    {
+      "path": ".办理.办理环节.审查标准",
+      "total": 2677089,
+      "empty": 689700,
+      "empty_rate": 0.257631
+    },
+    {
+      "path": ".申请.材料",
+      "total": 1090612,
+      "empty": 224074,
+      "empty_rate": 0.205457
+    },
+    {
+      "path": ".办理.窗口办理流程",
+      "total": 1090612,
+      "empty": 103390,
+      "empty_rate": 0.0948
+    },
+    {
+      "path": ".办理.网上办理流程",
+      "total": 1090612,
+      "empty": 98422,
+      "empty_rate": 0.090245
+    },
+    {
+      "path": ".法律依据.条款",
+      "total": 11744323,
+      "empty": 742123,
+      "empty_rate": 0.06319
+    },
+    {
+      "path": ".办理.跨域通办.覆盖地区",
+      "total": 1479048,
+      "empty": 72723,
+      "empty_rate": 0.049169
+    },
+    {
+      "path": ".办理.法定办结时限",
+      "total": 1090612,
+      "empty": 42887,
+      "empty_rate": 0.039324
+    },
+    {
+      "path": ".法律依据",
+      "total": 1090612,
+      "empty": 33088,
+      "empty_rate": 0.030339
+    },
+    {
+      "path": ".办理.跨域通办.通办形式",
+      "total": 1479048,
+      "empty": 31431,
+      "empty_rate": 0.021251
+    }
+  ],
+  "extremes": {
+    "max_line_bytes": {
+      "bytes": 198545,
+      "shard": "001050001-001100000.jsonl",
+      "line_no": 38984
+    },
+    "max_legal_basis_content_chars": {
+      "chars": 31834,
+      "编码": "11440000006941354C244212401W000",
+      "名称": "纳税人资格类型认定",
+      "shard": "000000001-000050000.jsonl"
+    },
+    "max_accept_condition_chars": {
+      "chars": 2869,
+      "编码": "11440100696931785D344011400800314",
+      "名称": "砍伐、迁移城市树木",
+      "shard": "000000001-000050000.jsonl"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+# 试点项目初始化配置（knext project create --config_path 用）
+# chat_llm/vectorizer 指向本地 mock（kg/deploy/mock_llm.py, 127.0.0.1:18999），
+# 仅用于通过 create/update 连通性校验；正式问答前必须换真实端点。
+openie_llm: &openie_llm
+  type: maas
+  base_url: http://192.168.31.80:18999/v1
+  api_key: mock
+  model: mock-chat
+  enable_check: false
+
+chat_llm: &chat_llm
+  type: maas
+  base_url: http://192.168.31.80:18999/v1
+  api_key: mock
+  model: mock-chat
+  enable_check: false
+
+vectorize_model: &vectorize_model
+  type: openai
+  base_url: http://192.168.31.80:18999/v1
+  api_key: mock
+  model: mock-emb
+  vector_dimensions: 1024
+  enable_check: false
+vectorizer: *vectorize_model
+
+log:
+  level: INFO
+
+project:
+  biz_scene: default
+  host_addr: http://127.0.0.1:8887
+  language: zh
+  namespace: GovAffair
+  checkpoint_path: ./builder/ckpt

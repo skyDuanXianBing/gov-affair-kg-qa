@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-08-09 13:27:49",
+  "duration_seconds": 258.7,
+  "lines_scanned": 1090612,
+  "totals": {
+    "html_entities": 0,
+    "html_tags": 16,
+    "tab_chars": 0,
+    "del_x7f": 0,
+    "other_c0": 0
+  },
+  "entity_by_name": {},
+  "entity_other_examples": {},
+  "entity_top_paths": [],
+  "tag_by_name": {
+    "xxx": 12,
+    "xx": 4
+  },
+  "tag_top_paths": [
+    {
+      "key": "<xxx> @.办理.办理环节.办理结果",
+      "count": 12
+    },
+    {
+      "key": "<xx> @.办理.办理环节.办理结果",
+      "count": 4
+    }
+  ],
+  "tab_top_paths": [],
+  "del_top_paths": [],
+  "c0_by_char": {},
+  "c0_top_paths": []
+}

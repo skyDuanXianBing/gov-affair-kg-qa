@@ -1,0 +1,137 @@
+namespace GovAffair
+
+# ============================================================
+# 广东政务服务事项知识图谱 Schema（v0.2：LegalCitation 演进）
+# 语法：OpenSPG SPG MarkLang（参照 KAG supplychain 示例）
+# 设计说明见 kg/design/schema_design.md
+# v0.2 变更：法条引用拆为 文号+条款 级弱实体 LegalCitation
+#   （试点实证：86% 引用条文与首见冲突、79% 条款边塌缩，见 pilot_result.md §4.1）
+# ============================================================
+
+# ---------------- 概念体系（ConceptType，isA 树） ----------------
+
+AffairType(事项类型): ConceptType
+	hypernymPredicate: isA
+
+ServiceTarget(服务对象): ConceptType
+	hypernymPredicate: isA
+
+ExerciseLevel(行使层级): ConceptType
+	hypernymPredicate: isA
+
+ThemeCategory(主题分类): ConceptType
+	hypernymPredicate: isA
+
+# ---------------- 共享实体 ----------------
+
+ImplementingOrg(实施主体): EntityType
+	properties:
+		name(部门名称): Text
+			index: Text
+
+Material(申请材料): EntityType
+	properties:
+		name(材料名称): Text
+			index: Text
+
+LegalBasis(法律依据): EntityType
+	properties:
+		title(法规名称): Text
+			index: Text
+		docNo(文号): Text
+			index: Text
+
+LegalCitation(法条引用): EntityType
+	properties:
+		name(引用名称): Text
+		article(条款): Text
+		content(条文内容): Text
+			index: TextAndVector
+	relations:
+		partOf(所属法规): LegalBasis
+
+ProcessStep(办理环节): EntityType
+	properties:
+		name(环节名称): Text
+		stepIndex(环节序号): Integer
+		step(步骤): Text
+		link(环节): Text
+		handler(办理人员): Text
+		timeLimit(办理时限): Text
+		result(办理结果): Text
+		reviewStandard(审查标准): Text
+			index: TextAndVector
+	relations:
+		nextStep(下一环节): ProcessStep
+
+ResultDocument(办理结果): EntityType
+	properties:
+		name(结果名称): Text
+			index: Text
+		docType(结果类型): Text
+		validNote(有效期说明): Text
+		note(结果说明): Text
+		attachments(公开附件): Text
+
+CrossRegionHandling(跨域通办): EntityType
+	properties:
+		name(名称): Text
+		coverRegion(覆盖地区): Text
+		throughForm(通办形式): Text
+		throughScope(通办范围): Text
+
+# ---------------- 核心实体：政务事项 ----------------
+
+Affair(政务事项): EntityType
+	properties:
+		name(事项名称): Text
+			index: Text
+		# 概念语义属性（CSV 单元格填概念 id，多值用英文逗号分隔）
+		affairType(事项类型): AffairType
+		serviceTarget(服务对象): ServiceTarget
+			constraint: MultiValue
+		exerciseLevel(行使层级): ExerciseLevel
+			constraint: MultiValue
+		theme(主题分类): ThemeCategory
+		# 实体语义属性（自动转边）
+		implementedBy(实施主体): ImplementingOrg
+		hasStep(办理环节): ProcessStep
+			constraint: MultiValue
+		produceResult(办理结果): ResultDocument
+			constraint: MultiValue
+		supportCrossRegion(跨域通办): CrossRegionHandling
+			constraint: MultiValue
+		# 标量属性
+		status(状态): Text
+		officialListCount(官方列表出现次数): Integer
+		handleDepth(办理深度): Text
+		handleMethods(办理方式): Text
+		isOnline(可网上办理): Text
+		isCharge(是否收费): Text
+		consultPhone(咨询电话): Text
+		complaintPhone(投诉电话): Text
+		promiseTimeLimit(承诺办结时限): Text
+		promiseTimeNote(承诺时限说明): Text
+		legalTimeLimit(法定办结时限): Text
+		legalTimeNote(法定时限说明): Text
+		handleAddress(办理地址): Text
+		onlineLimitNote(网上办理限制说明): Text
+		# 长文本属性（向量索引标注；supporting_chunks 溯源思路见设计文档）
+		acceptCondition(受理条件): Text
+			index: TextAndVector
+		windowProcess(窗口办理流程): Text
+			index: TextAndVector
+		onlineProcess(网上办理流程): Text
+			index: TextAndVector
+		sourceUrl(详情页地址): Text
+	relations:
+		requireMaterial(申请材料): Material
+			properties:
+				seq(材料序号): Text
+				copies(份数): Text
+				submitForm(提交形式): Text
+				materialType(材料类型): Text
+				materialSource(材料来源): Text
+				isRequired(是否必要): Text
+				note(材料说明): Text
+		citeLegal(引用法条): LegalCitation
