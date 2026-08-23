@@ -41,3 +41,8 @@ kg/_ref/
 
 # ===== 本地密钥（勿提交；模板见 .env.example）=====
 .env
+
+# OpenSPG generated migration artifacts (too large for Git)
+build/openspg-model-metadata/
+build/openspg-shards-*/
+build/import-runs/

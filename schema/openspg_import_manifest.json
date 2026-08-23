@@ -1,0 +1,998 @@
+{
+  "base_url": "",
+  "project_id": 1,
+  "namespace": "ZwdmxGJ",
+  "create_user": "openspg",
+  "jobs": [
+    {
+      "key": "service_domains",
+      "name": "共享-服务领域",
+      "group": "entities",
+      "file": "build/openspg-model-metadata/common/service_domains.csv",
+      "mapping": {
+        "domain_id": [
+          "id",
+          "domainId"
+        ],
+        "name": [
+          "name"
+        ],
+        "description": [
+          "description"
+        ],
+        "status": [
+          "status"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceDomain"
+      }
+    },
+    {
+      "key": "category_schemes",
+      "name": "共享-分类体系",
+      "group": "entities",
+      "file": "build/openspg-model-metadata/common/category_schemes.csv",
+      "mapping": {
+        "scheme_id": [
+          "id",
+          "schemeId"
+        ],
+        "name": [
+          "name"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "description": [
+          "description"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "CategoryScheme"
+      }
+    },
+    {
+      "key": "service_categories",
+      "name": "共享-服务分类",
+      "group": "entities",
+      "file": "build/openspg-model-metadata/common/service_categories.csv",
+      "mapping": {
+        "category_id": [
+          "id",
+          "categoryId"
+        ],
+        "name": [
+          "name"
+        ],
+        "category_level": [
+          "categoryLevel"
+        ],
+        "parent_category_id": [
+          "parentCategoryId"
+        ],
+        "scheme_id": [
+          "schemeId"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "description": [
+          "description"
+        ],
+        "status": [
+          "status"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceCategory"
+      }
+    },
+    {
+      "key": "knowledge_models",
+      "name": "共享-知识模型",
+      "group": "entities",
+      "file": "build/openspg-model-metadata/common/knowledge_models.csv",
+      "mapping": {
+        "model_id": [
+          "id",
+          "modelId"
+        ],
+        "name": [
+          "name"
+        ],
+        "model_type": [
+          "modelType"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "category_id": [
+          "categoryId"
+        ],
+        "version": [
+          "version"
+        ],
+        "description": [
+          "description"
+        ],
+        "schema_version": [
+          "schemaVersion"
+        ],
+        "status": [
+          "status"
+        ],
+        "enabled_entity_types": [
+          "enabledEntityTypes"
+        ],
+        "enabled_relation_types": [
+          "enabledRelationTypes"
+        ],
+        "retrieval_filter": [
+          "retrievalFilter"
+        ],
+        "validation_profile": [
+          "validationProfile"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "KnowledgeModel"
+      }
+    },
+    {
+      "key": "services",
+      "name": "pilot-政务事项",
+      "group": "entities",
+      "file": "build/openspg-model-metadata/pilot/services.csv",
+      "mapping": {
+        "service_id": [
+          "id",
+          "serviceId"
+        ],
+        "service_name": [
+          "name"
+        ],
+        "category_l1": [
+          "categoryL1"
+        ],
+        "category_l2": [
+          "categoryL2"
+        ],
+        "department_name": [
+          "departmentName"
+        ],
+        "department_code": [
+          "departmentCode"
+        ],
+        "source_url": [
+          "sourceUrl"
+        ],
+        "source_file": [
+          "sourceFile"
+        ],
+        "source_line": [
+          "sourceLine"
+        ],
+        "publish_date": [
+          "publishDate"
+        ],
+        "version_date": [
+          "versionDate"
+        ],
+        "dataset_scope": [
+          "datasetScope"
+        ],
+        "service_object": [
+          "serviceObject"
+        ],
+        "exercise_level": [
+          "exerciseLevel"
+        ],
+        "service_status": [
+          "serviceStatus"
+        ],
+        "online_depth": [
+          "onlineDepth"
+        ],
+        "online_available": [
+          "onlineAvailable"
+        ],
+        "promise_time_limit": [
+          "promiseTimeLimit"
+        ],
+        "legal_time_limit": [
+          "legalTimeLimit"
+        ],
+        "official_list_count": [
+          "officialListCount"
+        ],
+        "detail_return_code": [
+          "detailReturnCode"
+        ],
+        "source_record_sha256": [
+          "sourceRecordSha256"
+        ],
+        "official_json_sha256": [
+          "officialJsonSha256"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "category_id": [
+          "categoryId"
+        ],
+        "model_id": [
+          "modelId"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "GovernmentService"
+      }
+    },
+    {
+      "key": "departments",
+      "name": "pilot-部门",
+      "group": "entities",
+      "file": "dataset/pilot/departments.csv",
+      "mapping": {
+        "department_id": [
+          "id",
+          "departmentId"
+        ],
+        "department_name": [
+          "name"
+        ],
+        "department_code": [
+          "departmentCode"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "Department"
+      }
+    },
+    {
+      "key": "materials",
+      "name": "pilot-申请材料",
+      "group": "entities",
+      "file": "dataset/pilot/materials.csv",
+      "mapping": {
+        "material_id": [
+          "id",
+          "materialId"
+        ],
+        "material_name": [
+          "name"
+        ],
+        "material_type": [
+          "materialType"
+        ],
+        "source_type": [
+          "sourceType"
+        ],
+        "submission_format": [
+          "submissionFormat"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "Material"
+      }
+    },
+    {
+      "key": "conditions",
+      "name": "pilot-办理条件",
+      "group": "entities",
+      "file": "dataset/pilot/conditions.csv",
+      "mapping": {
+        "condition_id": [
+          "id",
+          "conditionId"
+        ],
+        "condition_text": [
+          "description"
+        ],
+        "condition_name": [
+          "name"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceCondition"
+      }
+    },
+    {
+      "key": "process_steps",
+      "name": "pilot-办理步骤",
+      "group": "entities",
+      "file": "dataset/pilot/process_steps.csv",
+      "mapping": {
+        "process_step_id": [
+          "id",
+          "processStepId"
+        ],
+        "step_name": [
+          "name"
+        ],
+        "step_code": [
+          "stepCode"
+        ],
+        "handler": [
+          "handler"
+        ],
+        "time_limit": [
+          "timeLimit"
+        ],
+        "check_standard": [
+          "checkStandard"
+        ],
+        "step_result": [
+          "description"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ProcessStep"
+      }
+    },
+    {
+      "key": "results",
+      "name": "pilot-办理结果",
+      "group": "entities",
+      "file": "dataset/pilot/results.csv",
+      "mapping": {
+        "result_id": [
+          "id",
+          "resultId"
+        ],
+        "result_name": [
+          "name"
+        ],
+        "result_type": [
+          "resultType"
+        ],
+        "result_description": [
+          "description"
+        ],
+        "license_code": [
+          "licenseCode"
+        ],
+        "validity_period": [
+          "validityPeriod"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceResult"
+      }
+    },
+    {
+      "key": "legal_bases",
+      "name": "pilot-法律依据",
+      "group": "entities",
+      "file": "dataset/pilot/legal_bases.csv",
+      "mapping": {
+        "legal_basis_id": [
+          "id",
+          "legalBasisId"
+        ],
+        "law_name": [
+          "name"
+        ],
+        "article": [
+          "article"
+        ],
+        "document_number": [
+          "documentNumber"
+        ],
+        "clause_content": [
+          "description"
+        ],
+        "published_date": [
+          "publishedDate"
+        ],
+        "law_url": [
+          "lawUrl"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "LegalBasis"
+      }
+    },
+    {
+      "key": "faqs",
+      "name": "pilot-FAQ",
+      "group": "entities",
+      "file": "dataset/pilot/faqs.csv",
+      "mapping": {
+        "faq_id": [
+          "id",
+          "faqId"
+        ],
+        "question": [
+          "name"
+        ],
+        "answer": [
+          "answer",
+          "description"
+        ],
+        "order_no": []
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "FAQ"
+      }
+    },
+    {
+      "key": "service_channels",
+      "name": "pilot-办理渠道",
+      "group": "entities",
+      "file": "dataset/pilot/service_channels.csv",
+      "mapping": {
+        "channel_id": [
+          "id",
+          "channelId"
+        ],
+        "channel_type": [
+          "channelType"
+        ],
+        "channel_value": [
+          "name"
+        ],
+        "service_time": [
+          "serviceTime"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceChannel"
+      }
+    },
+    {
+      "key": "fees",
+      "name": "pilot-收费信息",
+      "group": "entities",
+      "file": "dataset/pilot/fees.csv",
+      "mapping": {
+        "fee_id": [
+          "id",
+          "feeId"
+        ],
+        "fee_name": [
+          "name"
+        ],
+        "fee_standard": [
+          "feeStandard"
+        ],
+        "fee_basis": [
+          "description"
+        ],
+        "fee_status": [
+          "feeStatus"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "Fee"
+      }
+    },
+    {
+      "key": "category_parent",
+      "name": "共享-分类-父分类",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/category_parent.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "parentCategory",
+        "target_type": "ServiceCategory"
+      }
+    },
+    {
+      "key": "category_belongs_to_scheme",
+      "name": "共享-分类-分类体系",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/category_belongs_to_scheme.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "belongsToScheme",
+        "target_type": "CategoryScheme"
+      }
+    },
+    {
+      "key": "category_belongs_to_domain",
+      "name": "共享-分类-服务领域",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/category_belongs_to_domain.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      }
+    },
+    {
+      "key": "model_applies_to_category",
+      "name": "共享-模型-适用分类",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/model_applies_to_category.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "appliesToCategory",
+        "target_type": "ServiceCategory"
+      }
+    },
+    {
+      "key": "model_belongs_to_domain",
+      "name": "共享-模型-服务领域",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/model_belongs_to_domain.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      }
+    },
+    {
+      "key": "model_extends_model",
+      "name": "共享-模型-继承模型",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/common/model_extends_model.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "extendsModel",
+        "target_type": "KnowledgeModel"
+      }
+    },
+    {
+      "key": "service_belongs_to_domain",
+      "name": "pilot-事项-服务领域",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/pilot/service_belongs_to_domain.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      }
+    },
+    {
+      "key": "service_classified_as",
+      "name": "pilot-事项-服务分类",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/pilot/service_classified_as.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "classifiedAs",
+        "target_type": "ServiceCategory"
+      }
+    },
+    {
+      "key": "service_uses_model",
+      "name": "pilot-事项-知识模型",
+      "group": "relations",
+      "file": "build/openspg-model-metadata/pilot/service_uses_model.csv",
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "usesModel",
+        "target_type": "KnowledgeModel"
+      }
+    },
+    {
+      "key": "service_handled_by",
+      "name": "pilot-事项-主管部门",
+      "group": "relations",
+      "file": "dataset/pilot/service_handled_by.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "department_id": [
+          "end_id"
+        ],
+        "department_role": [
+          "departmentRole"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "handledBy",
+        "target_type": "Department"
+      }
+    },
+    {
+      "key": "service_collaborates_with",
+      "name": "pilot-事项-协同部门",
+      "group": "relations",
+      "file": "dataset/pilot/service_collaborates_with.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "department_id": [
+          "end_id"
+        ],
+        "participates_in_step": [
+          "participatesInStep"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "collaboratesWith",
+        "target_type": "Department"
+      }
+    },
+    {
+      "key": "service_requires_material",
+      "name": "pilot-事项-申请材料",
+      "group": "relations",
+      "file": "dataset/pilot/service_requires_material.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "material_id": [
+          "end_id"
+        ],
+        "required": [
+          "required"
+        ],
+        "order_no": [
+          "orderNo"
+        ],
+        "material_description": [
+          "materialDescription"
+        ],
+        "acceptance_standard": [
+          "acceptanceStandard"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "requiresMaterial",
+        "target_type": "Material"
+      }
+    },
+    {
+      "key": "service_has_condition",
+      "name": "pilot-事项-办理条件",
+      "group": "relations",
+      "file": "dataset/pilot/service_has_condition.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "condition_id": [
+          "end_id"
+        ],
+        "condition_source": [
+          "conditionSource"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasCondition",
+        "target_type": "ServiceCondition"
+      }
+    },
+    {
+      "key": "service_has_process_step",
+      "name": "pilot-事项-办理步骤",
+      "group": "relations",
+      "file": "dataset/pilot/service_has_process_step.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "process_step_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasProcessStep",
+        "target_type": "ProcessStep"
+      }
+    },
+    {
+      "key": "process_step_next",
+      "name": "pilot-办理步骤-下一步骤",
+      "group": "relations",
+      "file": "dataset/pilot/process_step_next.csv",
+      "mapping": {
+        "service_id": [],
+        "from_process_step_id": [
+          "start_id"
+        ],
+        "to_process_step_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ProcessStep",
+        "relation": "nextStep",
+        "target_type": "ProcessStep"
+      }
+    },
+    {
+      "key": "service_produces_result",
+      "name": "pilot-事项-办理结果",
+      "group": "relations",
+      "file": "dataset/pilot/service_produces_result.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "result_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "producesResult",
+        "target_type": "ServiceResult"
+      }
+    },
+    {
+      "key": "service_based_on",
+      "name": "pilot-事项-法律依据",
+      "group": "relations",
+      "file": "dataset/pilot/service_based_on.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "legal_basis_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ],
+        "basis_source": [
+          "basisSource"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "basedOn",
+        "target_type": "LegalBasis"
+      }
+    },
+    {
+      "key": "service_has_faq",
+      "name": "pilot-事项-FAQ",
+      "group": "relations",
+      "file": "dataset/pilot/service_has_faq.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "faq_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasFaq",
+        "target_type": "FAQ"
+      }
+    },
+    {
+      "key": "service_has_channel",
+      "name": "pilot-事项-办理渠道",
+      "group": "relations",
+      "file": "dataset/pilot/service_has_channel.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "channel_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasChannel",
+        "target_type": "ServiceChannel"
+      }
+    },
+    {
+      "key": "service_has_fee",
+      "name": "pilot-事项-收费信息",
+      "group": "relations",
+      "file": "dataset/pilot/service_has_fee.csv",
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "fee_id": [
+          "end_id"
+        ]
+      },
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasFee",
+        "target_type": "Fee"
+      }
+    },
+    {
+      "key": "documents_chunks",
+      "name": "pilot-政务文档内容",
+      "group": "documents",
+      "file": "build/openspg-model-metadata/pilot/documents_chunks.csv",
+      "mapping": {
+        "chunk_id": [
+          "id"
+        ],
+        "doc_id": [
+          "docId"
+        ],
+        "chunk_no": [],
+        "chunk_count": [],
+        "title": [
+          "name"
+        ],
+        "content": [
+          "content"
+        ],
+        "category_l1": [
+          "categoryL1"
+        ],
+        "category_l2": [
+          "categoryL2"
+        ],
+        "service_id": [
+          "serviceId"
+        ],
+        "department_name": [
+          "departmentName"
+        ],
+        "source_url": [
+          "sourceUrl"
+        ],
+        "source_file": [
+          "sourceFile"
+        ],
+        "source_line": [
+          "sourceLine"
+        ],
+        "extras_json": [],
+        "domain_id": [
+          "domainId"
+        ],
+        "category_id": [
+          "categoryId"
+        ],
+        "model_id": [
+          "modelId"
+        ]
+      },
+      "schema_target": {
+        "kind": "entity",
+        "type": "Chunk"
+      },
+      "retrievals": [
+        1
+      ]
+    }
+  ],
+  "version": 3,
+  "dataset": "pilot",
+  "source_root": "dataset/pilot",
+  "prepared_root": "build/openspg-prepared/pilot",
+  "model_architecture": "unified_namespace_domain_category_profiles",
+  "model_metadata_root": "build/openspg-model-metadata"
+}
