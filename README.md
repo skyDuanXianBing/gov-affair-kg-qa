@@ -17,6 +17,7 @@
 - **1 万条试点图谱**：107,068 节点 / 375,415 边，与适配器期望值 100% 对账一致（`kg/pilot/pilot_result.md`）
 - **全图向量化**：bge-m3（1024 维）覆盖 100% 节点，Neo4j 5 类向量索引
 - **自建 RAG 问答**（`qa/`，当前主路径）：四类索引并行检索 → 图扩展（材料/流程链/法条→法规含文号）→ DeepSeek `deepseek-v4-flash` 生成；多轮对话指代消解改写；拒答边界与来源引用
+- **KAG 式多跳检索**（`qa/multihop.py`，机制提取自 OpenSPG/KAG solver 并按本项目图模型重写）：LLM 规划跳计划（locate/traverse × ≤4，关系白名单）→ 逐跳执行并做变量绑定（上一跳实体 = 下一跳图上起点）→ 失败自动回退单轮；WebUI 可切换单轮/多跳/对比模式，并逐跳可视化检索路径
 
 ## 目录结构
 
@@ -28,7 +29,7 @@
 | `kg/build/` | `adapter.py`（JSONL→CSV 适配器）、`indexer.py`（建图入口） |
 | `kg/pilot/` | 1 万条试点：抽样脚本、对账基线、`GovAffair/` 项目目录（含问答管道 prompt） |
 | `kg/deploy/` | docker-compose（OpenSPG 全家桶）+ 运维 README |
-| `qa/` | 自建 RAG：`retriever.py` / `generator.py` / `server.py` / `web/` |
+| `qa/` | 自建 RAG：`retriever.py` / `multihop.py` / `generator.py` / `server.py` / `web/` |
 | `.pi/specs/` | 专项交付报告（DeepSeek 接入、v0.2 重灌图、全图向量化） |
 
 ## 快速开始

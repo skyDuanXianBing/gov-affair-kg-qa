@@ -39,7 +39,7 @@
   header button:hover { background: rgba(255,255,255,.24); }
 
   #chat { flex: 1; overflow-y: auto; padding: 22px 0; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
 
   .welcome { text-align: center; padding: 36px 20px 10px; color: var(--text-sub); }
   .welcome .icon { font-size: 40px; margin-bottom: 10px; }
@@ -56,7 +56,7 @@
   .msg { display: flex; margin-bottom: 18px; }
   .msg.user { justify-content: flex-end; }
   .bubble {
-    max-width: 82%; padding: 11px 15px; border-radius: 10px;
+    max-width: 88%; padding: 11px 15px; border-radius: 10px;
     font-size: 14.5px; line-height: 1.75; word-break: break-word;
   }
   .msg.user .bubble {
@@ -80,6 +80,7 @@
     background: var(--gov-blue-light); color: var(--gov-blue-dark);
     padding: 1px 8px; border-radius: 10px; font-size: 11.5px;
   }
+  .meta .tag.hop { background: #e8f5e9; color: #2e7d32; }
   details { margin-top: 8px; font-size: 12px; }
   details summary {
     cursor: pointer; color: var(--gov-blue); user-select: none; outline: none;
@@ -92,6 +93,66 @@
   }
   .seed-row { display: flex; justify-content: space-between; padding: 1px 0; }
   .seed-row .score { color: var(--text-sub); }
+
+  /* -------- 多跳路径可视化 -------- */
+  .hop-list { margin-top: 8px; display: flex; flex-direction: column; }
+  .hop-card {
+    border: 1px solid var(--border); border-left: 3px solid var(--gov-blue);
+    background: #fff; border-radius: 8px; padding: 9px 12px;
+  }
+  .hop-title {
+    font-size: 13px; font-weight: 600; color: var(--gov-blue-dark);
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .hop-title .rel { font-family: "SF Mono", Menlo, monospace; font-weight: 700; }
+  .hop-title .bind {
+    font-size: 11px; color: #fff; background: var(--gov-blue);
+    border-radius: 9px; padding: 1px 8px; font-weight: 400;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .hop-title .badge {
+    font-size: 11px; background: var(--gov-blue-light); color: var(--gov-blue-dark);
+    border-radius: 9px; padding: 1px 8px; font-weight: 400;
+  }
+  .hop-desc { font-size: 12px; color: var(--text-sub); margin: 3px 0 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    font-size: 12px; border: 1px solid var(--border); border-radius: 12px;
+    padding: 2px 9px; max-width: 260px; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; background: #f8fafc; color: var(--text);
+  }
+  .chip .sc { color: #9aa7b5; font-size: 11px; margin-left: 3px; }
+  .chip.t-affair   { border-color: #9db8d8; color: #1a4f8a; background: #eef4fb; }
+  .chip.t-material { border-color: #a5d1a8; color: #2e7d32; background: #f0f8f1; }
+  .chip.t-citation { border-color: #e3c08a; color: #b26a00; background: #fdf6ec; }
+  .chip.t-basis    { border-color: #c9abdd; color: #7b3fa0; background: #f7f2fb; }
+  .chip.t-step     { border-color: #b7c4cd; color: #546e7a; background: #f4f7f9; }
+  .chip.t-org      { border-color: #b0bec5; color: #455a64; background: #f3f6f7; }
+  .chip.more { border-style: dashed; color: var(--text-sub); }
+  .hop-arrow {
+    text-align: center; color: var(--gov-blue); font-size: 12.5px;
+    padding: 4px 0; font-weight: 600; font-family: "SF Mono", Menlo, monospace;
+  }
+  .hop-note { font-size: 12px; color: #b26a00; }
+
+  /* -------- 对比模式 -------- */
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  @media (max-width: 720px) { .cmp { grid-template-columns: 1fr; } }
+  .cmp-col {
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px;
+    background: #fbfcfe; min-width: 0;
+  }
+  .cmp-col h4 {
+    font-size: 13px; color: var(--gov-blue-dark); margin-bottom: 6px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .cmp-col h4 .mode-badge {
+    background: var(--gov-blue); color: #fff; border-radius: 9px;
+    padding: 1px 10px; font-size: 11.5px; font-weight: 400;
+  }
+  .cmp-col h4 .mode-badge.mh { background: #2e7d32; }
+  .cmp-col h4 .tm { font-size: 11.5px; color: var(--text-sub); font-weight: 400; }
+  .cmp-col .meta { border-top: 1px dashed var(--border); }
 
   .loading { display: inline-flex; align-items: center; gap: 8px; color: var(--text-sub); }
   .loading .dots span {
@@ -107,6 +168,16 @@
   footer {
     flex-shrink: 0; background: #fff; border-top: 1px solid var(--border); padding: 12px 0 14px;
   }
+  .mode-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; flex-wrap: wrap; }
+  .mode-label { font-size: 12.5px; color: var(--text-sub); }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
+  .seg button {
+    border: none; background: #fff; color: var(--text-sub);
+    padding: 6px 16px; font-size: 13px; cursor: pointer; transition: all .15s;
+  }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button.on { background: var(--gov-blue); color: #fff; }
+  .mode-tip { font-size: 12px; color: #9aa7b5; }
   .input-row { display: flex; gap: 10px; align-items: flex-end; }
   #q {
     flex: 1; resize: none; border: 1px solid var(--border); border-radius: 8px;
@@ -121,11 +192,98 @@
   #send:hover { background: var(--gov-blue-dark); }
   #send:disabled { background: #9db4cc; cursor: not-allowed; }
   .hint { text-align: center; font-size: 11.5px; color: #9aa7b5; margin-top: 7px; }
+
+  /* -------- 左上角帮助按钮 + 模式说明弹窗 -------- */
+  header .help-btn {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,.16); color: #fff;
+    border: 1px solid rgba(255,255,255,.35);
+    font-size: 17px; font-weight: 700; line-height: 1; cursor: pointer;
+    padding: 0;
+  }
+  header .help-btn:hover { background: rgba(255,255,255,.3); }
+
+  .mm { position: fixed; inset: 0; z-index: 60; background: rgba(15,28,45,.58);
+        display: none; align-items: center; justify-content: center; padding: 20px; }
+  .mm.open { display: flex; }
+  .mm-card { background: #fff; border-radius: 14px; width: min(940px, 96vw);
+             max-height: 90vh; overflow-y: auto; padding: 20px 24px 16px;
+             box-shadow: 0 18px 50px rgba(10,25,45,.35); }
+  .mm-head { display: flex; align-items: center; justify-content: space-between; }
+  .mm-head h3 { font-size: 17px; color: var(--text); }
+  .mm-close { border: none; background: #f1f4f8; color: var(--text-sub);
+              width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; }
+  .mm-close:hover { background: #e2e8f0; }
+  .mm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+  @media (max-width: 760px) { .mm-grid { grid-template-columns: 1fr; } }
+  .mm-col h4 { font-size: 14px; display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+  .mm-col .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.d1 { background: var(--gov-blue); }
+  .dot.d2 { background: #2e7d32; }
+
+  /* 动画舞台：元素依次弹出，周期结束后统一淡出重来 */
+  .stage { border: 1px dashed var(--border); border-radius: 10px;
+           background: linear-gradient(#fbfdff, #f6f9fc); padding: 14px 12px 10px;
+           display: flex; flex-direction: column; align-items: center; }
+  .stage > * { margin-top: 3px; }
+  .st-single .st, .st-single .arr { animation: popStay 9s infinite both; }
+  .st-multi  .st, .st-multi  .arr { animation: popStay 12s infinite both; }
+  @keyframes popStay {
+    0%        { opacity: 0; transform: translateY(10px) scale(.95); }
+    3%        { opacity: 1; transform: none; }
+    91%       { opacity: 1; }
+    96%, 100% { opacity: 0; }
+  }
+  .arr { position: relative; color: var(--gov-blue); font-size: 12px; font-weight: 600;
+         font-family: "SF Mono", Menlo, monospace; padding: 2px 0 4px; }
+  .arr::after {  /* 箭头上下滑动的光点，暗示数据在"跳" */
+    content: ''; position: absolute; left: 50%; top: 0;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--gov-blue);
+    animation: dotDrop 1.4s infinite;
+  }
+  @keyframes dotDrop {
+    0%   { transform: translate(-50%, 0);    opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(-50%, 16px); opacity: 0; }
+  }
+  .nd { display: inline-flex; align-items: center; gap: 6px; border-radius: 14px;
+        padding: 3px 11px; border: 1.5px solid; background: #fff; font-size: 12.5px;
+        font-weight: 600; }
+  .nd .vb { font-family: "SF Mono", Menlo, monospace; font-size: 10px; color: #fff;
+            background: var(--gov-blue); border-radius: 7px; padding: 1px 6px; font-weight: 400; }
+  .nd.affair   { border-color: #9db8d8; color: #1a4f8a; background: #eef4fb; }
+  .nd.material { border-color: #a5d1a8; color: #2e7d32; background: #f0f8f1; }
+  .nd.citation { border-color: #e3c08a; color: #b26a00; background: #fdf6ec; }
+  .nd.basis    { border-color: #c9abdd; color: #7b3fa0; background: #f7f2fb; }
+  .nd.plain    { border-color: var(--border); color: var(--text-sub); background: #fff; }
+  .nd.hot { animation: pulseNode 1.8s infinite; }
+  @keyframes pulseNode {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(26,79,138,.28); }
+    55%      { box-shadow: 0 0 0 7px rgba(26,79,138,0); }
+  }
+  .qchip { background: var(--gov-blue); color: #fff; border-radius: 12px;
+           padding: 3px 12px; font-size: 12.5px; }
+  .plancard { border: 1px solid #e3c08a; background: #fffdf7; border-radius: 8px;
+              padding: 6px 12px; font-size: 12px; color: #8a5800; line-height: 1.7; }
+  .fan { display: flex; gap: 12px; align-items: flex-start; justify-content: center; }
+  .fan .fc { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .fan .fa { color: var(--gov-blue); font-size: 11px; }
+  .cap { font-size: 12px; color: #2e7d32; background: #f0f8f1; border: 1px solid #a5d1a8;
+         border-radius: 12px; padding: 2px 12px; }
+  .cap.blue { color: #1a4f8a; background: var(--gov-blue-light); border-color: #9db8d8; }
+  .mm-col ul { margin: 10px 0 0 1.2em; font-size: 12.5px; color: var(--text-sub); line-height: 1.8; }
+  .mm-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 12.5px; }
+  .mm-table th, .mm-table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  .mm-table th { background: #f4f7fb; color: var(--gov-blue-dark); }
+  .mm-table td:first-child { color: var(--text-sub); background: #fafcfe; }
+  .mm-foot { margin-top: 12px; font-size: 12px; color: var(--text-sub); line-height: 1.7; }
 </style>
 </head>
 <body>
 
 <header>
+  <button class="help-btn" onclick="openHelp()" title="两种检索模式的区别（动画讲解）">!</button>
   <div class="logo">政</div>
   <h1>政务事项智能问答</h1>
   <span class="sub">基于政务知识图谱（107,068 节点 / 375,415 边）· RAG</span>
@@ -136,23 +294,118 @@
   <div class="welcome" id="welcome">
     <div class="icon">🏛️</div>
     <h2>您好，我是政务问答助手</h2>
-    <p>我可以回答政务事项的<strong>所需材料、受理条件、办理流程、办理时限、法律依据</strong>等问题，<br>答案均来自知识图谱检索，并附来源引用。</p>
+    <p>我可以回答政务事项的<strong>所需材料、受理条件、办理流程、办理时限、法律依据</strong>等问题，<br>
+       答案均来自知识图谱检索，并附来源引用。下方可切换<strong>单轮检索 / 多跳检索 / 对比</strong>模式。</p>
     <div class="examples">
       <button onclick="askExample(this)">申领居住证需要提交哪些材料？</button>
-      <button onclick="askExample(this)">申领居住证的办理流程是什么？要多久能拿到？</button>
       <button onclick="askExample(this)">申领居住证的法律依据是什么？</button>
-      <button onclick="askExample(this)">注销居住证需要什么材料？</button>
+      <button onclick="askExample(this)">申领居住证和注销居住证分别需要什么材料？有哪些是共用的？</button>
+      <button onclick="askExample(this)">《广东省流动人口服务管理条例》是哪些事项的法律依据？</button>
     </div>
   </div>
 </div></div>
 
+<!-- 模式说明弹窗（动画讲解两种检索的区别） -->
+<div class="mm" id="helpModal" onclick="if(event.target===this)closeHelp()">
+  <div class="mm-card">
+    <div class="mm-head">
+      <h3>🔀 两种检索模式有什么区别？</h3>
+      <button class="mm-close" onclick="closeHelp()">×</button>
+    </div>
+
+    <div class="mm-grid">
+      <!-- 单轮检索 -->
+      <section class="mm-col">
+        <h4><span class="dot d1"></span>单轮检索 — 一次到位 · 固定模式</h4>
+        <div class="stage st-single">
+          <div class="st" style="animation-delay:.2s"><span class="qchip">❓ 申领居住证需要什么材料？</span></div>
+          <div class="arr" style="animation-delay:1.0s">↓ 问题只向量化一次 · 4 类索引并行</div>
+          <div class="st" style="animation-delay:1.4s">
+            <div class="fan">
+              <div class="fc"><span class="nd plain">事项</span></div>
+              <div class="fc"><span class="nd material">材料</span></div>
+              <div class="fc"><span class="nd citation">法条</span></div>
+              <div class="fc"><span class="nd basis">法规</span></div>
+            </div>
+          </div>
+          <div class="arr" style="animation-delay:2.4s">↓ 命中种子节点（如"事项"0.998）</div>
+          <div class="st" style="animation-delay:2.8s"><span class="nd affair hot">申领居住证</span></div>
+          <div class="arr" style="animation-delay:3.6s">↓ 按<strong>写死的模式</strong>扩展 1–2 跳（同时发生）</div>
+          <div class="st" style="animation-delay:4.0s">
+            <div class="fan">
+              <div class="fc"><span class="fa">↓</span><span class="nd material">所需材料</span></div>
+              <div class="fc"><span class="fa">↓</span><span class="nd plain">办理流程</span></div>
+              <div class="fc"><span class="fa">↓</span><span class="nd citation">法条</span><span class="fa">↓</span><span class="nd basis">法规+文号</span></div>
+            </div>
+          </div>
+          <div class="st" style="animation-delay:5.6s"><span class="cap blue">✓ 一次完成 · 各扩展互不传递 · 约 0.5–1 秒</span></div>
+        </div>
+        <ul>
+          <li>问题只做一次向量检索，四类索引<strong>同时</strong>找种子</li>
+          <li>种子命中后按预设 Cypher 模式扩 1–2 跳，跳数固定</li>
+          <li>各扩展之间<strong>没有信息传递</strong>，不会"跳来跳去"</li>
+        </ul>
+      </section>
+
+      <!-- 多跳检索 -->
+      <section class="mm-col">
+        <h4><span class="dot d2"></span>多跳检索 — 先规划 · 逐跳串行</h4>
+        <div class="stage st-multi">
+          <div class="st" style="animation-delay:.2s"><span class="qchip">❓ 哪些事项也要用到这份材料？</span></div>
+          <div class="arr" style="animation-delay:1.0s">↓ 先请 LLM 规划"跳计划"</div>
+          <div class="st" style="animation-delay:1.3s">
+            <div class="plancard">🧠 跳计划（最多 4 跳）<br>
+              ① 定位事项 → 绑定 <b>a1</b><br>
+              ② requireMaterial ⟶ 绑定 <b>m1</b><br>
+              ③ ⟵ requireMaterial 反查 → 绑定 <b>a2</b></div>
+          </div>
+          <div class="arr" style="animation-delay:2.6s">↓ 第 1 跳 · 向量定位</div>
+          <div class="st" style="animation-delay:2.9s"><span class="nd affair hot">申领居住证 <span class="vb">a1</span></span></div>
+          <div class="arr" style="animation-delay:4.1s">↓ 第 2 跳 · 从 a1 出发 requireMaterial ⟶</div>
+          <div class="st" style="animation-delay:4.4s"><span class="nd material hot">身份证复印件等材料 <span class="vb">m1</span></span></div>
+          <div class="arr" style="animation-delay:5.6s">↓ 第 3 跳 · 从 m1 反向 ⟵ requireMaterial</div>
+          <div class="st" style="animation-delay:5.9s"><span class="nd affair hot">注销居住证 <span class="vb">a2</span></span></div>
+          <div class="st" style="animation-delay:7.3s"><span class="cap">✓ 上一跳结果 = 下一跳起点 · 可反向 · 约 6–15 秒</span></div>
+        </div>
+        <ul>
+          <li>LLM 先把问题分解成<strong>带变量的跳计划</strong>（locate / traverse）</li>
+          <li>上一跳查到的实体绑定到变量（a1、m1…），<strong>作为下一跳在图上的起点</strong></li>
+          <li>支持<strong>反向遍历</strong>（如：法规→法条→引用它的事项），失败自动回退单轮</li>
+        </ul>
+      </section>
+    </div>
+
+    <table class="mm-table">
+      <tr><th></th><th>单轮检索</th><th>多跳检索</th></tr>
+      <tr><td>检索方式</td><td>向量找种子 + 固定图扩展</td><td>LLM 规划 + 逐跳图遍历</td></tr>
+      <tr><td>跳数</td><td>固定 1–2 跳</td><td>按需 1–4 跳</td></tr>
+      <tr><td>跳间传递</td><td>无</td><td>变量绑定，上跳结果 = 下跳起点</td></tr>
+      <tr><td>反向查询</td><td>弱（法规种子不扩展）</td><td>支持（法规⟵法条⟵事项）</td></tr>
+      <tr><td>耗时</td><td>约 0.5–1 秒</td><td>约 6–15 秒（含 1 次规划）</td></tr>
+      <tr><td>LLM 调用</td><td>1 次（仅生成）</td><td>2 次（规划 + 生成）</td></tr>
+      <tr><td>适合</td><td>单事项直接提问</td><td>跨事项比较 / 链式 / 反查类问题</td></tr>
+    </table>
+    <p class="mm-foot">💡 <b>对比模式</b>会用两种模式同时检索同一问题并排展示答案与路径，方便直观比较；
+       多跳规划失败时会自动回退为单轮检索（回答区会显示 ⚠ 提示）。机制提取自 OpenSPG/KAG solver，按本项目图模型重写。</p>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
+    <div class="mode-row">
+      <span class="mode-label">检索模式</span>
+      <div class="seg" id="modeSeg">
+        <button data-mode="single" class="on">单轮检索</button>
+        <button data-mode="multihop">多跳检索</button>
+        <button data-mode="compare">对比</button>
+      </div>
+      <span class="mode-tip" id="modeTip">向量检索 + 固定图扩展（1–2 跳）</span>
+    </div>
     <div class="input-row">
       <textarea id="q" rows="1" placeholder="请输入您的问题，如：申领居住证需要提交哪些材料？"></textarea>
       <button id="send" onclick="send()">发送</button>
     </div>
-    <div class="hint">Enter 发送 · Shift+Enter 换行 · 回答由知识图谱检索增强生成，仅供参考</div>
+    <div class="hint">Enter 发送 · Shift+Enter 换行 · 多跳模式会先用 LLM 规划检索路径，再逐跳在图上检索</div>
   </div>
 </footer>
 
@@ -164,6 +417,24 @@ const sendBtn = document.getElementById('send');
 let history = [];
 const MAX_HISTORY = 8; // 最近 4 轮（8 条）
 
+// 检索模式
+let mode = 'single';
+const MODE_TIPS = {
+  single:   '向量检索 + 固定图扩展（1–2 跳）',
+  multihop: 'LLM 规划跳路径，逐跳沿图谱检索（最多 4 跳）',
+  compare:  '两种模式同时检索，并排对比答案与路径',
+};
+const TYPE_ZH = {affair:'事项', material:'材料', citation:'法条', basis:'法规',
+                  step:'环节', result:'办理结果', cross:'通办', org:'部门'};
+
+document.querySelectorAll('#modeSeg button').forEach(b => {
+  b.onclick = () => {
+    mode = b.dataset.mode;
+    document.querySelectorAll('#modeSeg button').forEach(x => x.classList.toggle('on', x === b));
+    document.getElementById('modeTip').textContent = MODE_TIPS[mode];
+  };
+});
+
 q.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
 });
@@ -174,7 +445,7 @@ q.addEventListener('input', () => {
 q.focus();
 
 function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // 极简 markdown：粗体 / 有序无序列表 / 换行
@@ -227,6 +498,117 @@ function clearChat() {
   location.reload();
 }
 
+function openHelp() {
+  document.getElementById('helpModal').classList.add('open');
+}
+function closeHelp() {
+  document.getElementById('helpModal').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeHelp();
+});
+
+// ---------- 多跳路径可视化 ----------
+function chip(e, type) {
+  const t = type || '';
+  const sc = e.score != null ? `<span class="sc">${e.score}</span>` : '';
+  return `<span class="chip t-${esc(t)}" title="${esc(e.name)}">` +
+         `${esc(e.name)}${sc}</span>`;
+}
+
+function chipList(items, type, cap) {
+  if (!items || !items.length) return '<span class="chip more">（无命中）</span>';
+  // 同名多区县实例按名去重展示,折叠数体现在 +N 徽标
+  const seen = new Set();
+  const uniq = items.filter(e => {
+    if (seen.has(e.name)) return false;
+    seen.add(e.name);
+    return true;
+  });
+  const shown = uniq.slice(0, cap || 6);
+  let html = shown.map(e => chip(e, type)).join('');
+  const hidden = items.length - shown.length;
+  if (hidden > 0) html += `<span class="chip more">+${hidden}</span>`;
+  return html;
+}
+
+function renderHops(hops, fallback, fallbackReason) {
+  if (!hops || !hops.length) return '';
+  let html = `<details open><summary>🔀 多跳检索路径（共 ${hops.length} 跳，点击折叠）</summary><div class="hop-list">`;
+  if (fallback) {
+    html += `<div class="hop-note">⚠ ${esc(fallbackReason || '规划失败')}，已回退单轮检索</div>`;
+  }
+  let prevBindName = null;
+  for (const h of hops) {
+    if (h.action === 'locate') {
+      html += `<div class="hop-card">` +
+        `<div class="hop-title">第${h.step}跳 · 向量定位` +
+        `<span class="badge">${esc(TYPE_ZH[h.type] || h.type)}</span>` +
+        `<span class="bind">${esc(h.bind)} = ${h.found_total || 0} 个节点</span></div>` +
+        `<div class="hop-desc">「${esc(h.query)}」${h.desc ? ' — ' + esc(h.desc) : ''}</div>` +
+        `<div class="chips">${chipList(h.found, h.type, 6)}</div></div>`;
+    } else {
+      const arrow = h.direction === 'in' ? '⟵' : '⟶';
+      html += `<div class="hop-arrow">↓ 沿 ${esc(h.relation)} ${arrow} ${esc(TYPE_ZH[h.type] || h.type)}</div>`;
+      html += `<div class="hop-card">` +
+        `<div class="hop-title">第${h.step}跳 · <span class="rel">${esc(h.relation)} ${arrow}</span>` +
+        `<span class="badge">${esc(TYPE_ZH[h.type] || h.type)}</span>` +
+        `<span class="bind">${esc(h.bind)} = ${h.found_total || 0} 个节点</span></div>` +
+        `<div class="hop-desc">从 <code>${esc(h.from)}</code> 出发` +
+        (h.start && h.start.length ? `（起点：${esc(h.start.join('、'))}）` : '') +
+        (h.desc ? ' — ' + esc(h.desc) : '') + (h.note ? ` · ⚠ ${esc(h.note)}` : '') + `</div>` +
+        `<div class="chips">${chipList(h.found, h.type, 6)}</div></div>`;
+    }
+  }
+  html += `</div></details>`;
+  return html;
+}
+
+// ---------- 单条结果渲染（普通 / 对比列通用）----------
+function renderResult(d, opts) {
+  const o = opts || {};
+  let html = '';
+  if (o.header) html += o.header;
+  html += md(d.answer || '（空回答）');
+  const seenTag = new Set();
+  const topSeeds = (d.seeds || []).filter(s => {
+    const k = s.label + s.name;
+    if (seenTag.has(k)) return false;
+    seenTag.add(k);
+    return true;
+  }).slice(0, 4);
+  let meta = `<div class="meta">` +
+    topSeeds.map(s => `<span class="tag">${esc(s.label)}·${esc(s.name)}</span>`).join('');
+  if (d.mode === 'multihop' && d.hops && d.hops.length) {
+    meta += `<span class="tag hop">🔀 ${d.hops.length} 跳</span>`;
+  }
+  meta += `<span>检索 ${d.retrieve_ms}ms · 生成 ${d.generate_ms}ms</span></div>`;
+  html += meta;
+
+  if (d.mode === 'multihop') {
+    html += renderHops(d.hops, d.fallback, d.fallback_reason);
+  }
+  if (d.context) {
+    const seedsHtml = (d.seeds || []).map(s =>
+      `<div class="seed-row"><span>[${esc(s.label)}] ${esc(s.name)}</span><span class="score">${s.score}</span></div>`
+    ).join('');
+    html += `<details><summary>检索详情（命中 ${d.seeds.length} 个节点）</summary>` +
+      `<div class="ctx">${seedsHtml}<br>${esc(d.context)}</div></details>`;
+  }
+  return html;
+}
+
+// ---------- 请求与发送 ----------
+async function askOnce(question, m) {
+  const resp = await fetch('/api/ask', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({question, history, mode: m}),
+  });
+  const data = await resp.json().catch(() => ({}));
+  return {ok: resp.ok, status: resp.status, data};
+}
+
 async function send() {
   const question = q.value.trim();
   if (!question || sendBtn.disabled) return;
@@ -239,9 +621,11 @@ async function send() {
 
   const loadingDiv = addMsg('bot',
     '<span class="loading"><span class="dots"><span></span><span></span><span></span></span><span id="loadtxt">正在理解问题…</span></span>');
-  const phases = history.length
-    ? ['正在理解问题…', '正在检索知识库…', '正在生成回答…']
-    : ['正在检索知识库…', '正在生成回答…', '即将完成…'];
+  const phases = mode === 'multihop' || mode === 'compare'
+    ? ['正在规划检索路径…', '正在逐跳检索知识图谱…', '正在生成回答…']
+    : (history.length
+        ? ['正在理解问题…', '正在检索知识库…', '正在生成回答…']
+        : ['正在检索知识库…', '正在生成回答…', '即将完成…']);
   let pi = 0;
   const timer = setInterval(() => {
     pi = Math.min(pi + 1, phases.length - 1);
@@ -250,49 +634,43 @@ async function send() {
   }, 2500);
 
   try {
-    const resp = await fetch('/api/ask', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({question, history}),
-    });
-    const data = await resp.json();
+    const requests = mode === 'compare'
+      ? [askOnce(question, 'single'), askOnce(question, 'multihop')]
+      : [askOnce(question, mode)];
+    const results = await Promise.all(requests);
     clearInterval(timer);
     loadingDiv.remove();
 
-    if (!resp.ok) {
-      addMsg('bot', `<span class="err">出错了：${esc(data.error || resp.statusText)}</span>`);
+    if (results.some(r => !r.ok)) {
+      const bad = results.find(r => !r.ok);
+      addMsg('bot', `<span class="err">出错了：${esc((bad.data && bad.data.error) || bad.status)}</span>`);
       return;
     }
 
     let html = '';
-    // 追问被改写时透明化展示
-    if (data.rewritten && data.rewritten !== question) {
+    const first = results[0].data;
+    if (first.rewritten && first.rewritten !== question) {
       html += `<p style="font-size:12.5px;color:var(--text-sub);margin-bottom:6px;">` +
-        `🔍 追问理解为：<em>${esc(data.rewritten)}</em></p>`;
+        `🔍 追问理解为：<em>${esc(first.rewritten)}</em></p>`;
     }
-    html += md(data.answer || '（空回答）');
-    const seenTag = new Set();
-    const topSeeds = (data.seeds || []).filter(s => {
-      const k = s.label + s.name;
-      if (seenTag.has(k)) return false;
-      seenTag.add(k);
-      return true;
-    }).slice(0, 4);
-    html += `<div class="meta">` +
-      topSeeds.map(s => `<span class="tag">${esc(s.label)}·${esc(s.name)}</span>`).join('') +
-      `<span>检索 ${data.retrieve_ms}ms · 生成 ${data.generate_ms}ms</span></div>`;
 
-    if (data.context) {
-      const seedsHtml = (data.seeds || []).map(s =>
-        `<div class="seed-row"><span>[${esc(s.label)}] ${esc(s.name)}</span><span class="score">${s.score}</span></div>`
-      ).join('');
-      html += `<details><summary>检索详情（命中 ${data.seeds.length} 个节点）</summary>` +
-        `<div class="ctx">${seedsHtml}<br>${esc(data.context)}</div></details>`;
+    let historyAnswer = '';
+    if (mode === 'compare') {
+      const [single, mh] = results.map(r => r.data);
+      html += `<div class="cmp">` +
+        `<div class="cmp-col"><h4><span class="mode-badge">单轮检索</span><span class="tm">检索 ${single.retrieve_ms}ms · 生成 ${single.generate_ms}ms</span></h4>${renderResult(single)}</div>` +
+        `<div class="cmp-col"><h4><span class="mode-badge mh">多跳检索</span><span class="tm">检索 ${mh.retrieve_ms}ms · 生成 ${mh.generate_ms}ms</span></h4>${renderResult(mh)}</div>` +
+        `</div>`;
+      historyAnswer = mh.answer || single.answer || '';
+    } else {
+      html += renderResult(first);
+      historyAnswer = first.answer || '';
     }
     addMsg('bot', html);
-    // 写入多轮历史
+
+    // 写入多轮历史（对比模式取多跳答案，保持与新链路一致）
     history.push({role: 'user', content: question});
-    history.push({role: 'assistant', content: data.answer || ''});
+    history.push({role: 'assistant', content: historyAnswer});
     if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
   } catch (e) {
     clearInterval(timer);

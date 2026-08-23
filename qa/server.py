@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from retriever import GovRetriever
 from generator import GovGenerator
+from multihop import MultiHopEngine
 
 HOST = "127.0.0.1"
 PORT = 8210
@@ -45,12 +46,14 @@ app = FastAPI(title="政务事项智能问答", docs_url=None, redoc_url=None)
 # 全局单例（neo4j driver / OpenAI client 均线程安全、内部连接池）
 retriever = GovRetriever()
 generator = GovGenerator()
-log.info("retriever/generator 初始化完成")
+multihop_engine = MultiHopEngine(retriever, generator)
+log.info("retriever/generator/multihop_engine 初始化完成")
 
 
 class AskReq(BaseModel):
     question: str = Field(min_length=1, max_length=500)
     history: list[dict] = Field(default_factory=list)  # [{role, content}, ...] 多轮上下文
+    mode: str = Field(default="single")                # single=单轮检索 | multihop=多跳检索
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -71,28 +74,47 @@ def health():
 @app.post("/api/ask")
 def ask_api(req: AskReq):
     q = req.question.strip()
+    mode = req.mode if req.mode in ("single", "multihop") else "single"
     t0 = time.time()
     try:
         # 多轮：先改写追问为独立问题（无历史时原样返回）
         rewritten = generator.rewrite(q, req.history)
         t_rw = time.time()
-        ret = retriever.retrieve(rewritten)
-        t1 = time.time()
-        context = ret.to_prompt_context()
+
+        hops: list[dict] = []
+        fallback, fallback_reason = False, ""
+        if mode == "multihop":
+            mh = multihop_engine.run(rewritten)
+            context = mh.context
+            seeds, hops = mh.seeds, mh.hops
+            fallback, fallback_reason = mh.fallback, mh.fallback_reason
+            retrieve_ms = mh.plan_ms + mh.exec_ms
+            t1 = t_rw + retrieve_ms / 1000.0
+        else:
+            ret = retriever.retrieve(rewritten)
+            t1 = time.time()
+            context = ret.to_prompt_context()
+            seeds = ret.seeds
+            retrieve_ms = int((t1 - t_rw) * 1000)
         out = generator.generate(rewritten, context, history=req.history)
         t2 = time.time()
-        log.info("Q=%r rewritten=%r seeds=%d rewrite=%dms retrieve=%dms generate=%dms",
-                 q, rewritten, len(ret.seeds), int((t_rw - t0) * 1000),
-                 int((t1 - t_rw) * 1000), int((t2 - t1) * 1000))
+        log.info("Q=%r mode=%s rewritten=%r seeds=%d hops=%d fallback=%s "
+                 "rewrite=%dms retrieve=%dms generate=%dms",
+                 q, mode, rewritten, len(seeds), len(hops), fallback,
+                 int((t_rw - t0) * 1000), retrieve_ms, int((t2 - t1) * 1000))
         return {
             "answer": out["answer"],
             "usage": out["usage"],
+            "mode": mode,
             "rewritten": rewritten,
             "seeds": [{"label": s.label, "name": s.name, "score": round(s.score, 4)}
-                      for s in ret.seeds],
+                      for s in seeds],
+            "hops": hops,
+            "fallback": fallback,
+            "fallback_reason": fallback_reason,
             "context": context,
             "rewrite_ms": int((t_rw - t0) * 1000),
-            "retrieve_ms": int((t1 - t_rw) * 1000),
+            "retrieve_ms": int(retrieve_ms),
             "generate_ms": int((t2 - t1) * 1000),
         }
     except Exception as e:
