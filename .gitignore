@@ -4,7 +4,7 @@
 # ===== 数据集（本地大体量，不入库）=====
 # 原始数据只读；清洗/归一化产物可由 cleaning/ 脚本重建
 data/
-
+.zcode
 # ===== 生成的大文件产物（可重建）=====
 # 试跑输出
 cleaning/trial/
@@ -46,3 +46,7 @@ kg/_ref/
 build/openspg-model-metadata/
 build/openspg-shards-*/
 build/import-runs/
+
+# ===== 论文 =====
+# 原始 PDF 不入库，仅提交中文翻译 Markdown 与图片资源
+论文/**/*.pdf
