@@ -1,0 +1,375 @@
+namespace ZwdmxGJ
+
+# 政务服务统一知识图谱 Schema v0.3
+# 设计：稳定骨架层 + 证据层 + 开放知识层
+# 数据：法人服务与个人事务共用同一 Namespace，通过 ServiceDomain、ServiceCategory、KnowledgeModel 区分领域和模型。
+# 说明：结构化 CSV 先按固定骨架导入；LLM 抽取结果进入 Proposition，不通过新增关系无限扩展 Schema。
+
+# ============================================================
+# 一、领域、分类与知识模型路由层
+# ============================================================
+
+ServiceDomain(服务领域): EntityType
+    properties:
+        name(领域名称): Text
+            index: Text
+        domainId(领域ID): Text
+            index: Text
+        description(领域说明): Text
+        status(状态): Text
+            index: Text
+        version(版本): Text
+
+CategoryScheme(分类体系): EntityType
+    properties:
+        name(分类体系名称): Text
+            index: Text
+        schemeId(分类体系ID): Text
+            index: Text
+        domainId(所属领域ID): Text
+            index: Text
+        description(分类体系说明): Text
+        version(版本): Text
+    relations:
+        belongsToDomain(所属领域): ServiceDomain
+
+ServiceCategory(服务分类): EntityType
+    properties:
+        name(分类名称): Text
+            index: Text
+        categoryId(分类ID): Text
+            index: Text
+        categoryLevel(分类层级): Integer
+        parentCategoryId(父分类ID): Text
+        schemeId(分类体系ID): Text
+        domainId(所属领域ID): Text
+        description(分类说明): Text
+        status(状态): Text
+            index: Text
+        version(版本): Text
+    relations:
+        parentCategory(父分类): ServiceCategory
+        belongsToScheme(所属分类体系): CategoryScheme
+        belongsToDomain(所属领域): ServiceDomain
+
+KnowledgeModel(知识模型): EntityType
+    properties:
+        name(模型名称): Text
+            index: Text
+        modelId(模型ID): Text
+            index: Text
+        modelType(模型类型): Text
+            index: Text
+        domainId(所属领域ID): Text
+        categoryId(适用分类ID): Text
+        version(版本): Text
+        schemaVersion(Schema版本): Text
+        description(模型说明): Text
+        enabledEntityTypes(启用实体类型): Text
+        enabledRelationTypes(启用关系类型): Text
+        retrievalFilter(检索过滤配置): Text
+        validationProfile(校验配置): Text
+        status(状态): Text
+            index: Text
+    relations:
+        appliesToCategory(适用分类): ServiceCategory
+        belongsToDomain(所属领域): ServiceDomain
+        extendsModel(继承模型): KnowledgeModel
+
+# ============================================================
+# 二、证据层
+# ============================================================
+
+Chunk(文本块): EntityType
+    properties:
+        name(文本块名称): Text
+        content(文本内容): Text
+            index: TextAndVector
+        chunkId(文本块ID): Text
+            index: Text
+        docId(文档ID): Text
+            index: Text
+        sourceId(来源节点ID): Text
+            index: Text
+        sourceType(来源节点类型): Text
+            index: Text
+        sourceField(来源字段): Text
+            index: Text
+        chunkIndex(文本块序号): Integer
+        chunkCount(文本块总数): Integer
+        serviceId(事项ID): Text
+            index: Text
+        categoryL1(一级分类): Text
+            index: Text
+        categoryL2(二级分类): Text
+            index: Text
+        departmentName(主管部门名称): Text
+            index: Text
+        sourceUrl(来源链接): Text
+        sourceFile(来源文件): Text
+        sourceLine(来源行号): Text
+        extractionVersion(切分版本): Text
+
+# ============================================================
+# 三、稳定业务骨架层
+# ============================================================
+
+GovernmentService(政务事项): EntityType
+    properties:
+        name(事项名称): Text
+            index: Text
+        serviceId(事项ID): Text
+            index: Text
+        categoryL1(一级分类): Text
+            index: Text
+        categoryL2(二级分类): Text
+            index: Text
+        domainId(领域ID): Text
+            index: Text
+        categoryId(分类ID): Text
+            index: Text
+        modelId(知识模型ID): Text
+            index: Text
+        departmentName(主管部门名称): Text
+            index: Text
+        departmentCode(主管部门编码): Text
+            index: Text
+        serviceObject(服务对象): Text
+            index: Text
+        exerciseLevel(行使层级): Text
+            index: Text
+        serviceStatus(事项状态): Text
+            index: Text
+        onlineDepth(网上办理深度): Text
+        onlineAvailable(可网上办理): Text
+        promiseTimeLimit(承诺办结时限): Text
+        legalTimeLimit(法定办结时限): Text
+        officialListCount(官方列表出现次数): Integer
+        publishDate(发布日期): Text
+        versionDate(版本日期): Text
+        sourceUrl(来源链接): Text
+        sourceFile(来源文件): Text
+        sourceLine(来源行号): Text
+        sourceRecordSha256(结构化记录SHA256): Text
+        officialJsonSha256(官方详情JSON SHA256): Text
+    relations:
+        belongsToDomain(所属领域): ServiceDomain
+        classifiedAs(所属分类): ServiceCategory
+        usesModel(使用知识模型): KnowledgeModel
+        handledBy(主管部门): Department
+            properties:
+                departmentRole(部门角色): Text
+        collaboratesWith(协同部门): Department
+            properties:
+                participatesInStep(参与步骤): Text
+        requiresMaterial(需要材料): Material
+            properties:
+                required(是否必要): Text
+                orderNo(材料顺序): Integer
+                materialDescription(材料说明): Text
+                acceptanceStandard(受理标准): Text
+        hasCondition(办理条件): ServiceCondition
+            properties:
+                conditionSource(条件来源): Text
+        hasProcessStep(办理步骤): ProcessStep
+            properties:
+                orderNo(步骤顺序): Integer
+        producesResult(办理结果): ServiceResult
+            properties:
+                orderNo(结果顺序): Integer
+        citesLegal(引用法律条款): LegalCitation
+            properties:
+                orderNo(依据顺序): Integer
+                basisSource(依据来源): Text
+        hasFaq(常见问答): FAQ
+            properties:
+                orderNo(问答顺序): Integer
+        hasChannel(办理渠道): ServiceChannel
+        hasFee(收费信息): Fee
+        hasChunk(原文块): Chunk
+        statesProposition(事实命题): Proposition
+
+Department(部门): EntityType
+    properties:
+        name(部门名称): Text
+            index: Text
+        departmentId(部门ID): Text
+            index: Text
+        departmentCode(部门编码): Text
+            index: Text
+        alias(部门别名): Text
+            constraint: MultiValue
+        canonicalName(规范名称): Text
+            index: Text
+        organizationLevel(机构层级): Text
+        regionCode(行政区划编码): Text
+    relations:
+        belongsTo(隶属于): Department
+
+Material(申请材料): EntityType
+    properties:
+        name(材料名称): Text
+            index: Text
+        materialId(材料ID): Text
+            index: Text
+        materialType(材料类型): Text
+            index: Text
+        sourceType(材料来源类型): Text
+        submissionFormat(提交形式): Text
+        alias(材料别名): Text
+            constraint: MultiValue
+        canonicalName(规范名称): Text
+            index: Text
+
+ServiceCondition(办理条件): EntityType
+    properties:
+        name(条件名称): Text
+            index: Text
+        conditionId(条件ID): Text
+            index: Text
+        description(原始条件文本): Text
+            index: Text
+        conditionType(条件类型): Text
+            index: Text
+        statement(条件陈述): Text
+            index: TextAndVector
+        sourceChunkId(来源文本块ID): Text
+            index: Text
+        confidence(置信度): Double
+        reviewStatus(审核状态): Text
+            index: Text
+    relations:
+        hasChunk(条件证据块): Chunk
+
+ProcessStep(办理步骤): EntityType
+    properties:
+        name(步骤名称): Text
+            index: Text
+        processStepId(步骤ID): Text
+            index: Text
+        stepCode(步骤编码): Text
+        handler(办理人员或机构): Text
+            index: Text
+        timeLimit(步骤时限): Text
+        checkStandard(核验标准): Text
+            index: TextAndVector
+        description(步骤结果): Text
+    relations:
+        nextStep(下一步骤): ProcessStep
+
+ServiceResult(办理结果): EntityType
+    properties:
+        name(结果名称): Text
+            index: Text
+        resultId(结果ID): Text
+            index: Text
+        resultType(结果类型): Text
+            index: Text
+        description(结果说明): Text
+        licenseCode(证照编码): Text
+        validityPeriod(有效期): Text
+
+LegalBasis(法规文件): EntityType
+    properties:
+        name(法规名称): Text
+            index: Text
+        legalBasisId(法规文件ID): Text
+            index: Text
+        documentNumber(文号): Text
+            index: Text
+        legalType(法规类型): Text
+            index: Text
+        issuingAuthority(发布机关): Text
+            index: Text
+        publishedDate(发布日期): Text
+        effectiveDate(生效日期): Text
+        lawUrl(法规链接): Text
+        alias(法规别名): Text
+            constraint: MultiValue
+        canonicalName(规范名称): Text
+            index: Text
+
+LegalCitation(法规条款引用): EntityType
+    properties:
+        name(引用名称): Text
+            index: Text
+        citationId(条款引用ID): Text
+            index: Text
+        article(条款): Text
+            index: Text
+        content(条文内容): Text
+            index: TextAndVector
+        sourceChunkId(来源文本块ID): Text
+        confidence(置信度): Double
+        reviewStatus(审核状态): Text
+            index: Text
+    relations:
+        partOf(所属法规文件): LegalBasis
+        hasChunk(条款证据块): Chunk
+        statesProposition(条款命题): Proposition
+
+FAQ(常见问答): EntityType
+    properties:
+        name(问题): Text
+            index: Text
+        faqId(问答ID): Text
+            index: Text
+        answer(答案): Text
+            index: TextAndVector
+        description(答案说明): Text
+        orderNo(问答顺序): Integer
+
+ServiceChannel(办理渠道): EntityType
+    properties:
+        name(渠道内容): Text
+            index: Text
+        channelId(渠道ID): Text
+            index: Text
+        channelType(渠道类型): Text
+            index: Text
+        serviceTime(服务时间): Text
+        description(渠道说明): Text
+
+Fee(收费信息): EntityType
+    properties:
+        name(收费项目): Text
+            index: Text
+        feeId(收费ID): Text
+            index: Text
+        feeStandard(收费标准): Text
+        description(收费依据): Text
+        feeStatus(收费状态): Text
+            index: Text
+
+# ============================================================
+# 四、开放知识层
+# ============================================================
+
+Proposition(知识命题): EntityType
+    properties:
+        name(命题名称): Text
+        propositionId(命题ID): Text
+            index: Text
+        subjectId(主体ID): Text
+            index: Text
+        subjectType(主体类型): Text
+            index: Text
+        predicate(开放谓词): Text
+            index: Text
+        objectId(客体ID): Text
+            index: Text
+        objectType(客体类型): Text
+            index: Text
+        objectValue(客体字面值): Text
+        statement(上下文独立陈述): Text
+            index: TextAndVector
+        sourceChunkId(来源文本块ID): Text
+            index: Text
+        confidence(置信度): Double
+        extractionMethod(抽取方法): Text
+        extractionModel(抽取模型): Text
+        extractionVersion(抽取版本): Text
+        reviewStatus(审核状态): Text
+            index: Text
+    relations:
+        extractedFrom(抽取自): Chunk
