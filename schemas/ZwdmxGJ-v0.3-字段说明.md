@@ -2,7 +2,7 @@
 
 > 对应 Schema：`schemas/ZwdmxGJ-v0.3.schema`  
 > 目标 Namespace：`ZwdmxGJ`  
-> 适用数据：`dataset/pilot/`、`dataset/personal/`
+> 适用数据：`data/pilot/`、`data/personal/`
 
 ## 1. 通用字段规则
 
@@ -15,6 +15,20 @@
 | `canonicalName` | 归一化后的标准名称 | 用于实体归一后的展示和检索 |
 | `confidence` | 抽取、归一或匹配置信度 | 范围建议为 `0~1`；规则导入可留空 |
 | `reviewStatus` | 审核状态 | 建议值：`pending`、`approved`、`rejected`、`needs_review` |
+
+### 1.1 实体 ID 生成规则（共享 / 私有）
+
+导入期由 `scripts/build_shared_ids.py` 统一重写并输出到 `build/shared_ids/<dataset>/`，原始 CSV 不修改。名称规范化统一为：NFKC 全角归一 + 去除全部空白 + casefold（只影响 ID 哈希键，不改动展示名称）。
+
+| 类别 | 实体 | ID 规则 | 说明 |
+|---|---|---|---|
+| 共享（材料） | `Material` | `M-{md5(规范化材料名称)[:16]}` | 同名（规范化后）材料跨事项、跨数据域合并为一个节点；材料原始 id 是事项私有 digest，必须重写 |
+| 共享（法规） | `LegalBasis` | `LB-{md5(规范化法规名\|规范化文号)[:16]}` | 文号缺失时文档键退化为规范化法规名称；同名不同文号、同文号不同法规名均不合并（同一修改决定文号可同时修改多部法规，法规名必须参与键） |
+| 共享（法规） | `LegalCitation` | `LC-{md5(规范化法规名\|规范化文号\|规范化条款)[:16]}` | 文号缺失时同样退化；`legal_bases.csv` 一行拆为 LegalCitation + `partOf` 指向 LegalBasis；`service_based_on` 引用改写为 LC id |
+| 共享（部门） | `Department` | 按部门名称（辅以编码）归一 | 现有 `departments.csv` 已是共享层 |
+| 事项私有弱实体 | `ProcessStep`、`ServiceCondition`、`ServiceResult`、`FAQ`、`Fee`、`ServiceChannel`、`Chunk` | id 保留事项编码（service_id）前缀，不跨事项共享 | 同名步骤/条件在不同事项下是不同实体 |
+
+同名合并后的冲突处理：`LegalCitation` 同 id 但 `clause_content` 不一致时保留首见并计数；`LegalBasis` 同 id 的法规名称因参与哈希键必然一致，仅检测发布日期/链接不一致并计数（`basis_law_name_conflicts` 在当前键设计下恒为 0，保留仅作回归监控）。计数与压缩比写入 `build/shared_ids/<dataset>/stats.json`。
 
 ## 2. 领域、分类和知识模型
 
@@ -105,21 +119,21 @@ KnowledgeModel --extendsModel--> KnowledgeModel
 | `modelId` | 负责该事项的知识模型 ID | 元数据生成结果 |
 | `departmentName` | 主管部门名称 | `department_name` |
 | `departmentCode` | 主管部门编码 | `department_code` |
-| `serviceObject` | 服务对象 | 规范化服务字段 |
-| `exerciseLevel` | 行使层级 | 规范化服务字段 |
-| `serviceStatus` | 事项状态 | 规范化服务字段 |
-| `onlineDepth` | 网上办理深度 | 规范化服务字段 |
-| `onlineAvailable` | 是否可以网上办理 | 规范化服务字段 |
-| `promiseTimeLimit` | 承诺办结时限 | 规范化服务字段 |
-| `legalTimeLimit` | 法定办结时限 | 规范化服务字段 |
-| `officialListCount` | 官方列表中出现的次数 | 规范化服务字段 |
+| `serviceObject` | 服务对象 | **当前无 CSV 来源列**，导入期从 documents content/extras 派生或置空（见修订版 §2.2.1） |
+| `exerciseLevel` | 行使层级 | **当前无 CSV 来源列**，导入期派生或置空 |
+| `serviceStatus` | 事项状态 | **当前无 CSV 来源列**，导入期派生或置空 |
+| `onlineDepth` | 网上办理深度 | **当前无 CSV 来源列**，导入期派生或置空 |
+| `onlineAvailable` | 是否可以网上办理 | **当前无 CSV 来源列**，导入期派生或置空 |
+| `promiseTimeLimit` | 承诺办结时限 | **当前无 CSV 来源列**，导入期从 content"办理时限"派生或置空 |
+| `legalTimeLimit` | 法定办结时限 | **当前无 CSV 来源列**，导入期从 content"办理时限"派生或置空 |
+| `officialListCount` | 官方列表中出现的次数 | **当前无 CSV 来源列**，导入期置空 |
 | `publishDate` | 发布日期 | `publish_date` |
 | `versionDate` | 版本日期 | `version_date` |
 | `sourceUrl` | 官方详情页链接 | `source_url` |
 | `sourceFile` | 来源文件 | `source_file` |
 | `sourceLine` | 来源行号 | `source_line` |
-| `sourceRecordSha256` | 结构化记录指纹 | 归一化产物 |
-| `officialJsonSha256` | 官方详情 JSON 指纹 | 归一化产物 |
+| `sourceRecordSha256` | 结构化记录指纹 | **当前无 CSV 来源列**，导入期置空 |
+| `officialJsonSha256` | 官方详情 JSON 指纹 | **当前无 CSV 来源列**，导入期置空 |
 
 关系：
 
@@ -166,14 +180,13 @@ Department --belongsTo--> Department
 | 字段 | 含义 |
 |---|---|
 | `name` | 材料名称 |
-| `materialId` | 材料稳定 ID |
-| `materialType` | 材料类型 |
-| `sourceType` | 材料来源，例如申请人自备、政府部门核发 |
-| `submissionFormat` | 提交形式，例如纸质、电子化 |
+| `materialId` | 材料稳定 ID，共享 id：`M-{md5(规范化材料名称)[:16]}`，见 1.1 |
 | `alias` | 已确认的同义材料名称 |
-| `canonicalName` | 标准材料名称 |
+| `canonicalName` | 标准材料名称（规范化后的哈希键文本） |
 
-`required`、`orderNo`、`materialDescription`、`acceptanceStandard` 属于事项和材料之间的关系属性，不属于 Material 节点本身。
+`Material` 是共享实体：同名（规范化后）材料跨事项合并，节点只保留共享层字段。
+
+`required`、`orderNo`、`materialDescription`、`acceptanceStandard`、`materialType`、`sourceType`、`submissionFormat` 属于事项和材料之间的关系属性，不属于 Material 节点本身。其中 `materialType`（材料类型）、`sourceType`（材料来源，例如申请人自备、政府部门核发）、`submissionFormat`（提交形式，例如纸质、电子化）来自 `materials.csv` 的逐事项字段，重写时通过 JOIN 私有材料行逐对下沉到 `requiresMaterial` 边（`service_requires_material_out.csv` 的对应列）。
 
 ## 6. ServiceCondition
 
@@ -218,7 +231,7 @@ Department --belongsTo--> Department
 | 字段 | 含义 |
 |---|---|
 | `name` | 法规名称 |
-| `legalBasisId` | 法规文件稳定 ID |
+| `legalBasisId` | 法规文件稳定 ID，共享 id：`LB-{md5(规范化法规名\|规范化文号)[:16]}`，文号缺失时文档键退化为规范化法规名称，见 1.1 |
 | `documentNumber` | 法规文号 |
 | `legalType` | 法律、行政法规、地方性法规、部门规章、规范性文件等 |
 | `issuingAuthority` | 发布机关 |
@@ -233,7 +246,7 @@ Department --belongsTo--> Department
 | 字段 | 含义 |
 |---|---|
 | `name` | 法规名称和条款组成的可读名称 |
-| `citationId` | 条款引用 ID，建议由规范化文号和条款生成 |
+| `citationId` | 条款引用 ID，共享 id：`LC-{md5(规范化法规名\|规范化文号\|规范化条款)[:16]}`，见 1.1 |
 | `article` | 条款号 |
 | `content` | 条文内容 |
 | `sourceChunkId` | 条文来源 Chunk ID |
@@ -249,7 +262,7 @@ LegalCitation --hasChunk--> Chunk
 LegalCitation --statesProposition--> Proposition
 ```
 
-同一法规不同条款必须保持为不同的 LegalCitation，不能因为文号相同而覆盖条款内容。
+同一法规不同条款必须保持为不同的 LegalCitation，不能因为文号相同而覆盖条款内容；同名不同文号的法规也不能因为名称相同而合并。`legal_bases.csv` 的一行（法规 + 条款）在导入前由 `scripts/build_shared_ids.py` 拆分为 `legal_citations_out.csv`（条款级）与 `legal_bases_out.csv`（文号级去重），并生成 `part_of.csv`（LegalCitation --partOf--> LegalBasis）；原始 `legal_basis_id` 保留为 `first_source_legal_basis_id` / `source_legal_basis_id` 来源追踪字段。同 id 但 `clause_content` 不一致的行保留首见并计入 stats。
 
 ## 11. FAQ
 
@@ -341,11 +354,11 @@ Proposition --extractedFrom--> Chunk
 |---|---|
 | `services.csv` | `GovernmentService` |
 | `departments.csv` | `Department` |
-| `materials.csv` | `Material` |
+| `materials.csv` | `Material`（经 `build_shared_ids.py` 重写为共享 ID：`materials_out.csv`） |
 | `conditions.csv` | `ServiceCondition` |
 | `process_steps.csv` | `ProcessStep` |
 | `results.csv` | `ServiceResult` |
-| `legal_bases.csv` | `LegalBasis` + `LegalCitation`，需要转换 |
+| `legal_bases.csv` | 拆分为 `LegalCitation`（`legal_citations_out.csv`）+ `LegalBasis`（`legal_bases_out.csv`）+ `partOf` 边（`part_of.csv`） |
 | `faqs.csv` | `FAQ` |
 | `service_channels.csv` | `ServiceChannel` |
 | `fees.csv` | `Fee` |
@@ -357,12 +370,12 @@ Proposition --extractedFrom--> Chunk
 |---|---|
 | `service_handled_by.csv` | `GovernmentService.handledBy` |
 | `service_collaborates_with.csv` | `GovernmentService.collaboratesWith` |
-| `service_requires_material.csv` | `GovernmentService.requiresMaterial` |
+| `service_requires_material.csv` | `GovernmentService.requiresMaterial`（重写产物 `service_requires_material_out.csv` 补逐事项材料字段列） |
 | `service_has_condition.csv` | `GovernmentService.hasCondition` |
 | `service_has_process_step.csv` | `GovernmentService.hasProcessStep` |
 | `process_step_next.csv` | `ProcessStep.nextStep` |
 | `service_produces_result.csv` | `GovernmentService.producesResult` |
-| `service_based_on.csv` | 转换后为 `GovernmentService.citesLegal` |
+| `service_based_on.csv` | 转换后为 `GovernmentService.citesLegal`（重写产物 `service_based_on_out.csv` 的引用已改为 LC id） |
 | `service_has_faq.csv` | `GovernmentService.hasFaq` |
 | `service_has_channel.csv` | `GovernmentService.hasChannel` |
 | `service_has_fee.csv` | `GovernmentService.hasFee` |

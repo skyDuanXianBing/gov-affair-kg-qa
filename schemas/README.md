@@ -43,6 +43,7 @@ Proposition 开放知识层
 
 1. OpenSPG MarkLang 语法校验；
 2. Schema 实体和关系与导入 manifest 对齐；
-3. LegalBasis / LegalCitation 的 CSV 转换；
-4. 关系域值域约束校验；
-5. 法人 1000 条和个人 1000 条试点验收。
+3. LegalBasis / LegalCitation 的 CSV 转换（`scripts/build_shared_ids.py`，产物在 `build/shared_ids/`）；
+4. 共享 ID 重写产物导入验收（pilot 481,501 事项 + personal 1,090,612 事项，实测规模见数据 manifests）；
+5. 关系域值域约束校验；
+6. 图查询试点验收（data/pilot 与 data/personal 各域 testset）。

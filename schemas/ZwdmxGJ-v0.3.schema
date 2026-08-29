@@ -4,6 +4,16 @@ namespace ZwdmxGJ
 # 设计：稳定骨架层 + 证据层 + 开放知识层
 # 数据：法人服务与个人事务共用同一 Namespace，通过 ServiceDomain、ServiceCategory、KnowledgeModel 区分领域和模型。
 # 说明：结构化 CSV 先按固定骨架导入；LLM 抽取结果进入 Proposition，不通过新增关系无限扩展 Schema。
+#
+# 实体 ID 生成规则（导入期由 scripts/build_shared_ids.py 统一重写）：
+# - 共享实体：Material = M-{md5(规范化材料名称)[:16]}；
+#   LegalBasis = LB-{md5(规范化法规名|规范化文号)[:16]}，文号缺失时文档键退化为规范化法规名称；
+#   LegalCitation = LC-{md5(规范化法规名|规范化文号|规范化条款)[:16]}。
+#   规范化 = NFKC 全角归一 + 去除全部空白 + casefold；同名不同文号不合并，同文号不同法规名
+#   也不合并（同一修改决定文号可同时修改多部法规，法规名必须参与键，否则条文内容互相覆盖）。
+# - Department 按部门名称（辅以编码）归一为共享实体。
+# - 事项私有弱实体：ProcessStep、ServiceCondition、ServiceResult、FAQ、Fee、ServiceChannel、Chunk
+#   等 id 保留事项编码前缀（service_id 派生），不跨事项共享。
 
 # ============================================================
 # 一、领域、分类与知识模型路由层
@@ -168,6 +178,9 @@ GovernmentService(政务事项): EntityType
                 orderNo(材料顺序): Integer
                 materialDescription(材料说明): Text
                 acceptanceStandard(受理标准): Text
+                materialType(材料类型): Text
+                sourceType(材料来源类型): Text
+                submissionFormat(提交形式): Text
         hasCondition(办理条件): ServiceCondition
             properties:
                 conditionSource(条件来源): Text
@@ -207,15 +220,13 @@ Department(部门): EntityType
         belongsTo(隶属于): Department
 
 Material(申请材料): EntityType
+    # 共享实体：同名（规范化后）材料跨事项合并；materialType/sourceType/submissionFormat
+    # 属于逐事项字段，由 requiresMaterial 边逐对承载，不在节点上。
     properties:
         name(材料名称): Text
             index: Text
         materialId(材料ID): Text
             index: Text
-        materialType(材料类型): Text
-            index: Text
-        sourceType(材料来源类型): Text
-        submissionFormat(提交形式): Text
         alias(材料别名): Text
             constraint: MultiValue
         canonicalName(规范名称): Text

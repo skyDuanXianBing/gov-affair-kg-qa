@@ -16,6 +16,8 @@ kg/pilot/csv_v2/
 kg/pilot/pilot_10000.jsonl
 # 适配器试跑输出
 kg/build/out_trial/
+# 共享 ID 重写产物（由 scripts/build_shared_ids.py 重建）
+build/shared_ids/
 
 # ===== 运行时 / 缓存 =====
 __pycache__/
