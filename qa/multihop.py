@@ -16,6 +16,11 @@
   - 每题仅 +1 次 LLM 规划调用，无逐跳 summary——KAG 靠 summary 绑定"答案文本"，
     本实现绑定"实体节点"，对图遍历已足够。
 
+图模型双图开关：环境变量 KG_SCHEMA（govaffair | zwdmxgj，默认 govaffair，
+在 retriever 模块导入时读取）。TYPE_INFO/REL_INFO/别名表/PLAN_SYSTEM 说明段按
+SCHEMA_VARIANTS 切换（映射依据 docs/GovAffair到ZwdmxGJ迁移映射.md §1/§2/§5）；
+govaffair 变体为旧图原值，行为与单图版本完全一致。
+
 链路：
   问题 → DeepSeek 规划跳计划 → 逐跳执行
        ├ locate   bge-m3 向量检索定位实体，绑定别名（a1/m1/...）
@@ -33,55 +38,189 @@ from dataclasses import dataclass, field
 
 from retriever import (
     GovRetriever, RetrievalResult, Seed,
-    IDX_AFFAIR, IDX_MATERIAL, IDX_CITATION_CONTENT, IDX_BASIS,
+    KG_SCHEMA, LABEL_VARIANTS, INDEX_VARIANTS, ID_PROP, SERVICE_TYPE,
     clean, truncate,
 )
 
-# ---------------------------------------------------------------- 图模型白名单
 
-# 类型键 → (Neo4j 标签, 向量索引, 中文名, 定位分数下限)；无索引的类型只能作为遍历目标
-TYPE_INFO = {
-    "affair":   ("GovAffair.Affair",             IDX_AFFAIR,           "事项",   0.45),
-    "material": ("GovAffair.Material",           IDX_MATERIAL,         "材料",   0.45),
-    "citation": ("GovAffair.LegalCitation",      IDX_CITATION_CONTENT, "法条",   0.45),
-    "basis":    ("GovAffair.LegalBasis",         IDX_BASIS,            "法规",   0.72),
-    "step":     ("GovAffair.ProcessStep",        None,                 "环节",   0.45),
-    "result":   ("GovAffair.ResultDocument",     None,                 "办理结果", 0.45),
-    "cross":    ("GovAffair.CrossRegionHandling", None,                "通办",   0.45),
-    "org":      ("GovAffair.ImplementingOrg",    None,                 "部门",   0.45),
-}
-LOCATABLE = {"affair", "material", "citation", "basis"}
+def _labels(schema: str) -> dict:
+    """schema 变体 → {类型键: 完整标签}（标签前缀唯一来源在 retriever.LABEL_VARIANTS，
+    若灌图实测为短名仅改该处 prefix，本文件无需再动）。"""
+    cfg = LABEL_VARIANTS[schema]
+    return {k: cfg["prefix"] + s for k, s in cfg["short"].items()}
 
-# 关系 → (出向源类型, 出向目标类型, 中文含义)；均与图中实际关系类型一一对应（db.relationshipTypes 现验）
-REL_INFO = {
-    "requireMaterial":    ("affair",   "material", "所需材料"),
-    "hasStep":            ("affair",   "step",     "办理环节"),
-    "nextStep":           ("step",     "step",     "下一环节"),
-    "citeLegal":          ("affair",   "citation", "引用法条"),
-    "partOf":             ("citation", "basis",    "所属法规"),
-    "produceResult":      ("affair",   "result",   "办理结果"),
-    "supportCrossRegion": ("affair",   "cross",    "通办范围"),
-    "implementedBy":      ("affair",   "org",      "实施部门"),
+
+_LBL = {schema: _labels(schema) for schema in ("govaffair", "zwdmxgj")}
+
+# ---------------------------------------------------------------- 图模型白名单（双图变体）
+
+# SCHEMA_VARIANTS：两套图模型的检索面配置。
+# govaffair 表为旧图原值（行为快照）；zwdmxgj 表按迁移映射 §2.3 落地，
+# 最终以灌图实测（db.labels() / db.relationshipTypes()）为准。
+SCHEMA_VARIANTS = {
+    "govaffair": {
+        # 类型键 → (Neo4j 标签, 向量索引, 中文名, 定位分数下限)；无索引的类型只能作为遍历目标
+        "type_info": {
+            "affair":   (_LBL["govaffair"]["affair"],   INDEX_VARIANTS["govaffair"]["service_name"],      "事项",   0.45),
+            "material": (_LBL["govaffair"]["material"], INDEX_VARIANTS["govaffair"]["material_name"],      "材料",   0.45),
+            "citation": (_LBL["govaffair"]["citation"], INDEX_VARIANTS["govaffair"]["citation_content"],   "法条",   0.45),
+            "basis":    (_LBL["govaffair"]["basis"],    INDEX_VARIANTS["govaffair"]["basis_name"],         "法规",   0.72),
+            "step":     (_LBL["govaffair"]["step"],     None, "环节",   0.45),
+            "result":   (_LBL["govaffair"]["result"],   None, "办理结果", 0.45),
+            "cross":    (_LBL["govaffair"]["cross"],    None, "通办",   0.45),
+            "org":      (_LBL["govaffair"]["org"],      None, "部门",   0.45),
+        },
+        "locatable": {"affair", "material", "citation", "basis"},
+        # 关系 → (出向源类型, 出向目标类型, 中文含义)；均与图中实际关系类型一一对应
+        "rel_info": {
+            "requireMaterial":    ("affair",   "material", "所需材料"),
+            "hasStep":            ("affair",   "step",     "办理环节"),
+            "nextStep":           ("step",     "step",     "下一环节"),
+            "citeLegal":          ("affair",   "citation", "引用法条"),
+            "partOf":             ("citation", "basis",    "所属法规"),
+            "produceResult":      ("affair",   "result",   "办理结果"),
+            "supportCrossRegion": ("affair",   "cross",    "通办范围"),
+            "implementedBy":      ("affair",   "org",      "实施部门"),
+        },
+        # LLM 输出的类型/关系名归一化（大小写与中文别名 → 白名单键）
+        "type_alias": {
+            "affair": "affair", "事项": "affair", "政务事项": "affair",
+            "material": "material", "材料": "material",
+            "citation": "citation", "法条": "citation", "条款": "citation",
+            "basis": "basis", "法规": "basis", "法律依据": "basis",
+        },
+        "rel_alias": {
+            "requirematerial": "requireMaterial", "所需材料": "requireMaterial",
+            "需要材料": "requireMaterial", "申请材料": "requireMaterial",
+            "citelegal": "citeLegal", "引用法条": "citeLegal",
+            "partof": "partOf", "所属法规": "partOf",
+            "hasstep": "hasStep", "办理环节": "hasStep",
+            "nextstep": "nextStep", "下一环节": "nextStep",
+            "produceresult": "produceResult", "办理结果": "produceResult",
+            "supportcrossregion": "supportCrossRegion", "通办范围": "supportCrossRegion",
+            "implementedby": "implementedBy", "实施部门": "implementedBy", "实施主体": "implementedBy",
+        },
+        # PLAN_SYSTEM 的图模型说明段 / 示例段（其余模板共享，见 _PLAN_TMPL_*）
+        "graph_desc": (
+            "- 可定位类型（type，向量检索）：affair=政务事项、material=材料、citation=法条（按条文内容）、basis=法规（按名称）\n"
+            "- 关系（relation 白名单；括号内为方向说明）：\n"
+            "  requireMaterial: 事项→材料（out=查某事项要什么材料；in=反查哪些事项需要某材料）\n"
+            "  citeLegal: 事项→法条（out）；partOf: 法条→法规（out，可得到法规名与文号）\n"
+            "  hasStep: 事项→办理环节（out）；nextStep: 环节→环节（out）\n"
+            "  produceResult: 事项→办理结果（out）；supportCrossRegion: 事项→通办范围（out）；implementedBy: 事项→实施部门（out）"
+        ),
+        "plan_example": (
+            '{"hops":[\n'
+            ' {"step":1,"action":"locate","type":"affair","query":"申领居住证","bind":"a1","desc":"定位事项"},\n'
+            ' {"step":2,"action":"traverse","from":"a1","relation":"requireMaterial","direction":"out","bind":"m1","desc":"查所需材料"},\n'
+            ' {"step":3,"action":"traverse","from":"m1","relation":"requireMaterial","direction":"in","bind":"a2","desc":"反查共用该材料的事项"}\n'
+            ']}'
+        ),
+    },
+    "zwdmxgj": {
+        "type_info": {
+            "service":     (_LBL["zwdmxgj"]["service"],     INDEX_VARIANTS["zwdmxgj"]["service_name"],          "事项",     0.45),
+            "material":    (_LBL["zwdmxgj"]["material"],    INDEX_VARIANTS["zwdmxgj"]["material_name"],         "材料",     0.45),
+            "citation":    (_LBL["zwdmxgj"]["citation"],    INDEX_VARIANTS["zwdmxgj"]["citation_content"],      "法条",     0.45),
+            "basis":       (_LBL["zwdmxgj"]["basis"],       INDEX_VARIANTS["zwdmxgj"]["basis_name"],            "法规",     0.72),
+            "chunk":       (_LBL["zwdmxgj"]["chunk"],       INDEX_VARIANTS["zwdmxgj"]["chunk_content"],         "原文块",   0.45),
+            "condition":   (_LBL["zwdmxgj"]["condition"],   INDEX_VARIANTS["zwdmxgj"]["condition_statement"],   "办理条件", 0.45),
+            "faq":         (_LBL["zwdmxgj"]["faq"],         INDEX_VARIANTS["zwdmxgj"]["faq_answer"],            "常见问答", 0.45),
+            "proposition": (_LBL["zwdmxgj"]["proposition"], INDEX_VARIANTS["zwdmxgj"]["proposition_statement"], "命题",     0.45),
+            "step":        (_LBL["zwdmxgj"]["step"],        None, "环节",     0.45),
+            "result":      (_LBL["zwdmxgj"]["result"],      None, "办理结果", 0.45),
+            "department":  (_LBL["zwdmxgj"]["department"],  None, "部门",     0.45),
+            "channel":     (_LBL["zwdmxgj"]["channel"],     None, "渠道",     0.45),
+            "fee":         (_LBL["zwdmxgj"]["fee"],         None, "收费",     0.45),
+            "category":    (_LBL["zwdmxgj"]["category"],    None, "分类",     0.45),
+            "domain":      (_LBL["zwdmxgj"]["domain"],      None, "领域",     0.45),
+        },
+        # cross 已随 CrossRegionHandling 删除，不再可定位（迁移映射 §1.1#7）
+        "locatable": {"service", "material", "citation", "basis",
+                      "chunk", "condition", "faq", "proposition"},
+        "rel_info": {
+            "requiresMaterial":  ("service", "material",    "所需材料"),
+            "hasProcessStep":    ("service", "step",        "办理步骤"),
+            "nextStep":          ("step",    "step",        "下一步骤"),
+            "citesLegal":        ("service", "citation",    "引用法条"),
+            "partOf":            ("citation", "basis",      "所属法规"),
+            "producesResult":    ("service", "result",      "办理结果"),
+            "handledBy":         ("service", "department",  "主管部门"),
+            "collaboratesWith":  ("service", "department",  "协同部门"),
+            "hasCondition":      ("service", "condition",   "办理条件"),
+            "hasChunk":          ("service", "chunk",       "原文块"),
+            "hasFaq":            ("service", "faq",         "常见问答"),
+            "hasChannel":        ("service", "channel",     "办理渠道"),
+            "hasFee":            ("service", "fee",         "收费信息"),
+            "classifiedAs":      ("service", "category",    "所属分类"),
+            "belongsToDomain":   ("service", "domain",      "所属领域"),
+            "statesProposition": ("service", "proposition", "事实命题"),
+        },
+        "type_alias": {
+            "service": "service", "事项": "service", "政务事项": "service",
+            "affair": "service",  # 兼容 LLM 沿用旧图类型名
+            "material": "material", "材料": "material",
+            "citation": "citation", "法条": "citation", "条款": "citation",
+            "basis": "basis", "法规": "basis", "法律依据": "basis",
+            "chunk": "chunk", "原文块": "chunk", "原文": "chunk",
+            "condition": "condition", "办理条件": "condition", "条件": "condition",
+            "faq": "faq", "常见问答": "faq", "问答": "faq",
+            "proposition": "proposition", "命题": "proposition", "事实命题": "proposition",
+        },
+        "rel_alias": {
+            "requiresmaterial": "requiresMaterial", "所需材料": "requiresMaterial",
+            "需要材料": "requiresMaterial", "申请材料": "requiresMaterial",
+            "requirematerial": "requiresMaterial",  # 兼容 LLM 沿用旧图拼写（cross 无对应，已摘除）
+            "citeslegal": "citesLegal", "citelegal": "citesLegal", "引用法条": "citesLegal",
+            "partof": "partOf", "所属法规": "partOf",
+            "hasprocessstep": "hasProcessStep", "办理步骤": "hasProcessStep", "办理环节": "hasProcessStep",
+            "hasstep": "hasProcessStep",
+            "nextstep": "nextStep", "下一步骤": "nextStep", "下一环节": "nextStep",
+            "producesresult": "producesResult", "produceresult": "producesResult",
+            "办理结果": "producesResult",
+            "handledby": "handledBy", "主管部门": "handledBy",
+            "实施部门": "handledBy", "实施主体": "handledBy", "implementedby": "handledBy",
+            "collaborateswith": "collaboratesWith", "协同部门": "collaboratesWith",
+            "hascondition": "hasCondition", "办理条件": "hasCondition",
+            "haschunk": "hasChunk", "原文块": "hasChunk",
+            "hasfaq": "hasFaq", "常见问答": "hasFaq",
+            "haschannel": "hasChannel", "办理渠道": "hasChannel",
+            "hasfee": "hasFee", "收费信息": "hasFee",
+            "classifiedas": "classifiedAs", "所属分类": "classifiedAs",
+            "belongstodomain": "belongsToDomain", "所属领域": "belongsToDomain",
+            "statesproposition": "statesProposition", "事实命题": "statesProposition",
+        },
+        "graph_desc": (
+            "- 可定位类型（type，向量检索）：service=政务事项、material=材料、citation=法条（按条文内容）、basis=法规（按名称）、chunk=原文块、condition=办理条件、faq=常见问答、proposition=命题\n"
+            "- 关系（relation 白名单；括号内为方向说明）：\n"
+            "  requiresMaterial: 事项→材料（out=查某事项要什么材料；in=反查哪些事项需要某材料）\n"
+            "  citesLegal: 事项→法条（out）；partOf: 法条→法规（out，可得到法规名与文号）\n"
+            "  hasProcessStep: 事项→办理步骤（out）；nextStep: 步骤→步骤（out）\n"
+            "  producesResult: 事项→办理结果（out）；handledBy: 事项→主管部门（out）；collaboratesWith: 事项→协同部门（out）\n"
+            "  hasCondition: 事项→办理条件（out）；hasChunk: 事项→原文块（out）；hasFaq: 事项→常见问答（out）\n"
+            "  hasChannel: 事项→办理渠道（out）；hasFee: 事项→收费信息（out）\n"
+            "  classifiedAs: 事项→分类（out）；belongsToDomain: 事项→领域（out）；statesProposition: 事项→命题（out）"
+        ),
+        "plan_example": (
+            '{"hops":[\n'
+            ' {"step":1,"action":"locate","type":"service","query":"申领居住证","bind":"a1","desc":"定位事项"},\n'
+            ' {"step":2,"action":"traverse","from":"a1","relation":"requiresMaterial","direction":"out","bind":"m1","desc":"查所需材料"},\n'
+            ' {"step":3,"action":"traverse","from":"m1","relation":"requiresMaterial","direction":"in","bind":"a2","desc":"反查共用该材料的事项"}\n'
+            ']}'
+        ),
+    },
 }
 
-# LLM 输出的类型/关系名归一化（大小写与中文别名 → 白名单键）
-_TYPE_ALIAS = {
-    "affair": "affair", "事项": "affair", "政务事项": "affair",
-    "material": "material", "材料": "material",
-    "citation": "citation", "法条": "citation", "条款": "citation",
-    "basis": "basis", "法规": "basis", "法律依据": "basis",
-}
-_REL_ALIAS = {
-    "requirematerial": "requireMaterial", "所需材料": "requireMaterial",
-    "需要材料": "requireMaterial", "申请材料": "requireMaterial",
-    "citelegal": "citeLegal", "引用法条": "citeLegal",
-    "partof": "partOf", "所属法规": "partOf",
-    "hasstep": "hasStep", "办理环节": "hasStep",
-    "nextstep": "nextStep", "下一环节": "nextStep",
-    "produceresult": "produceResult", "办理结果": "produceResult",
-    "supportcrossregion": "supportCrossRegion", "通办范围": "supportCrossRegion",
-    "implementedby": "implementedBy", "实施部门": "implementedBy", "实施主体": "implementedBy",
-}
+_VARIANT = SCHEMA_VARIANTS[KG_SCHEMA]
+
+# 当前生效的图模型白名单（multihop.py 顶层导出，供测试与上层消费）
+TYPE_INFO = _VARIANT["type_info"]
+LOCATABLE = _VARIANT["locatable"]
+REL_INFO = _VARIANT["rel_info"]
+_TYPE_ALIAS = _VARIANT["type_alias"]
+_REL_ALIAS = _VARIANT["rel_alias"]
+# 事项/服务主类型键（绑定上限、上下文组装中心）；与 retriever.SERVICE_TYPE 同源
+PRIMARY_TYPE = SERVICE_TYPE
 
 MAX_HOPS = 4          # 含 locate
 LOCATE_K = 5          # 向量检索 top-k
@@ -89,30 +228,31 @@ TRAVERSE_LIMIT = 30   # 单跳绑定节点上限
 
 # ---------------------------------------------------------------- 规划提示词
 
-PLAN_SYSTEM = """你是政务知识图谱的多跳检索规划器。给定用户问题，输出一个"跳计划"JSON：\
-逐跳在图上定位与遍历，最终收集回答问题所需的节点。
-
-图模型（只能使用以下类型与关系）：
-- 可定位类型（type，向量检索）：affair=政务事项、material=材料、citation=法条（按条文内容）、basis=法规（按名称）
-- 关系（relation 白名单；括号内为方向说明）：
-  requireMaterial: 事项→材料（out=查某事项要什么材料；in=反查哪些事项需要某材料）
-  citeLegal: 事项→法条（out）；partOf: 法条→法规（out，可得到法规名与文号）
-  hasStep: 事项→办理环节（out）；nextStep: 环节→环节（out）
-  produceResult: 事项→办理结果（out）；supportCrossRegion: 事项→通办范围（out）；implementedBy: 事项→实施部门（out）
-
-输出格式（只输出 JSON，不要解释、不要代码块标记）：
-{"hops":[
- {"step":1,"action":"locate","type":"affair","query":"申领居住证","bind":"a1","desc":"定位事项"},
- {"step":2,"action":"traverse","from":"a1","relation":"requireMaterial","direction":"out","bind":"m1","desc":"查所需材料"},
- {"step":3,"action":"traverse","from":"m1","relation":"requireMaterial","direction":"in","bind":"a2","desc":"反查共用该材料的事项"}
-]}
-
-规则：
-1. 第一步必须是 locate；总跳数（含 locate）最多 4。
-2. traverse 的 from 必须引用之前某步的 bind；direction 只能是 out 或 in；relation 必须用白名单拼写。
-3. bind 别名全局唯一（如 a1/m1/c1/b1/a2）；后续跳可引用任意前跳的 bind。
-4. 单跳即可回答的问题不要硬凑多跳；跨事项比较、链式追问才需要多跳。
-5. locate 的 query 用适合向量检索的短关键词，不要照抄整句问题。"""
+# 图模型说明段与示例段按 KG_SCHEMA 变体渲染，其余模板共享；
+# govaffair 渲染结果与单图版本逐字节一致。
+_PLAN_TMPL_HEAD = (
+    "你是政务知识图谱的多跳检索规划器。给定用户问题，输出一个\"跳计划\"JSON："
+    "逐跳在图上定位与遍历，最终收集回答问题所需的节点。\n"
+    "\n"
+    "图模型（只能使用以下类型与关系）：\n"
+)
+_PLAN_TMPL_MID = (
+    "\n"
+    "\n"
+    "输出格式（只输出 JSON，不要解释、不要代码块标记）：\n"
+)
+_PLAN_TMPL_TAIL = (
+    "\n"
+    "\n"
+    "规则：\n"
+    "1. 第一步必须是 locate；总跳数（含 locate）最多 4。\n"
+    "2. traverse 的 from 必须引用之前某步的 bind；direction 只能是 out 或 in；relation 必须用白名单拼写。\n"
+    "3. bind 别名全局唯一（如 a1/m1/c1/b1/a2）；后续跳可引用任意前跳的 bind。\n"
+    "4. 单跳即可回答的问题不要硬凑多跳；跨事项比较、链式追问才需要多跳。\n"
+    "5. locate 的 query 用适合向量检索的短关键词，不要照抄整句问题。"
+)
+PLAN_SYSTEM = (_PLAN_TMPL_HEAD + _VARIANT["graph_desc"] + _PLAN_TMPL_MID
+               + _VARIANT["plan_example"] + _PLAN_TMPL_TAIL)
 
 
 class PlanError(Exception):
@@ -254,9 +394,10 @@ class MultiHopEngine:
         _, idx, zh, floor = TYPE_INFO[h["type"]]
         vec = self.retriever.embed(h["query"])
         seeds = [s for s in self.retriever.vector_search(
-            session, idx, vec, LOCATE_K, zh) if s.score >= floor]
+            session, idx, vec, LOCATE_K, zh, id_prop=ID_PROP[h["type"]])
+            if s.score >= floor]
         # 事项存在同名多区县实例，按名去重只绑 1 个；其余类型绑前 3 个
-        cap = 1 if h["type"] == "affair" else 3
+        cap = 1 if h["type"] == PRIMARY_TYPE else 3
         seen, bound = set(), []
         for s in seeds:
             if s.name in seen:
@@ -300,18 +441,19 @@ class MultiHopEngine:
 
         src_label, dst_label = TYPE_INFO[src["type"]][0], TYPE_INFO[dst_t][0]
         ids = [e["id"] for e in src["entities"]]
+        # govaffair 统一业务 id；zwdmxgj 为 serviceId/citationId/...（retriever.ID_PROP）
+        id_s, id_o = ID_PROP[src["type"]], ID_PROP[dst_t]
+        # zwdmxgj：LegalBasis 文号属性为 documentNumber，别名回 docNo 列（LegalCitation
+        # 本无文号属性，返回 null，与旧图行为一致；迁移映射 §3.1 末段）
+        docno_col = "o.documentNumber AS docNo" if KG_SCHEMA == "zwdmxgj" else "o.docNo AS docNo"
+        ret_cols = (f"RETURN DISTINCT o.{id_o} AS id, o.name AS name, "
+                    f"{docno_col}, o.article AS article, o.content AS content ")
         if direction == "out":
             q = (f"MATCH (s:`{src_label}`)-[:{rel}]->(o:`{dst_label}`) "
-                 f"WHERE s.id IN $ids "
-                 f"RETURN DISTINCT o.id AS id, o.name AS name, "
-                 f"o.docNo AS docNo, o.article AS article, o.content AS content "
-                 f"LIMIT $lim")
+                 f"WHERE s.{id_s} IN $ids " + ret_cols + "LIMIT $lim")
         else:
             q = (f"MATCH (o:`{dst_label}`)-[:{rel}]->(s:`{src_label}`) "
-                 f"WHERE s.id IN $ids "
-                 f"RETURN DISTINCT o.id AS id, o.name AS name, "
-                 f"o.docNo AS docNo, o.article AS article, o.content AS content "
-                 f"LIMIT $lim")
+                 f"WHERE s.{id_s} IN $ids " + ret_cols + "LIMIT $lim")
         found = []
         for r in session.run(q, ids=ids, lim=TRAVERSE_LIMIT):
             e = {"id": r["id"], "name": clean(r["name"])}
@@ -342,7 +484,7 @@ class MultiHopEngine:
         affairs, seen = [], set()
         for alias in reversed(list(vars)):
             v = vars[alias]
-            if v["type"] != "affair":
+            if v["type"] != PRIMARY_TYPE:
                 continue
             for e in v["entities"]:
                 if e["name"] in seen:
@@ -377,7 +519,7 @@ class MultiHopEngine:
         # 最后一跳的非事项终点节点（含法规文号/法条内容等补充信息）
         for t in reversed(trace):
             if t["action"] == "traverse" and t["found_total"] > 0:
-                if t["type"] != "affair":
+                if t["type"] != PRIMARY_TYPE:
                     parts.append(f"\n【多跳终点节点】（第{t['step']}跳 {t['relation']}"
                                  f"{'→' if t['direction'] == 'out' else '←'}，共 {t['found_total']} 个）")
                     for e in t["bound"][:12]:
