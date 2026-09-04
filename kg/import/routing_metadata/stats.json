@@ -1,0 +1,19 @@
+{
+  "categories": 49,
+  "files": {
+    "service_domains": 1,
+    "category_schemes": 1,
+    "service_categories": 50,
+    "knowledge_models": 50,
+    "category_parent": 49,
+    "category_belongs_to_scheme": 50,
+    "category_belongs_to_domain": 50,
+    "model_applies_to_category": 49,
+    "model_belongs_to_domain": 50,
+    "model_extends_model": 49,
+    "service_belongs_to_domain": 481501,
+    "service_classified_as": 481501,
+    "service_uses_model": 481501
+  },
+  "schema_version": "ZwdmxGJ-v0.3"
+}

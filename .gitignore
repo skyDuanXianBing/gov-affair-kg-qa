@@ -52,3 +52,8 @@ build/import-runs/
 # ===== 论文 =====
 # 原始 PDF 不入库，仅提交中文翻译 Markdown 与图片资源
 论文/**/*.pdf
+
+# ===== OpenSPG 灌图（kg/import/）=====
+# 分片与 checkpoint 可由 run_import.py 重建/续传，不入库
+kg/import/shards/
+kg/import/checkpoints/

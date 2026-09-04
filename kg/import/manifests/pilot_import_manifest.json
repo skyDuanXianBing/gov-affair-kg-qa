@@ -1,0 +1,984 @@
+{
+  "base_url": "http://127.0.0.1:8887",
+  "project_id": 1,
+  "namespace": "ZwdmxGJ",
+  "create_user": "openspg",
+  "shard_target_mib": 128,
+  "shard_threshold_mib": 150.0,
+  "jobs": [
+    {
+      "key": "service_domains",
+      "name": "路由-服务领域",
+      "group": "routing",
+      "file": "kg/import/routing_metadata/service_domains.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceDomain"
+      },
+      "mapping": {
+        "domain_id": [
+          "id",
+          "domainId"
+        ],
+        "name": [
+          "name"
+        ],
+        "description": [
+          "description"
+        ],
+        "status": [
+          "status"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "category_schemes",
+      "name": "路由-分类体系",
+      "group": "routing",
+      "file": "kg/import/routing_metadata/category_schemes.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "CategoryScheme"
+      },
+      "mapping": {
+        "scheme_id": [
+          "id",
+          "schemeId"
+        ],
+        "name": [
+          "name"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "description": [
+          "description"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_categories",
+      "name": "路由-服务分类",
+      "group": "routing",
+      "file": "kg/import/routing_metadata/service_categories.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceCategory"
+      },
+      "mapping": {
+        "category_id": [
+          "id",
+          "categoryId"
+        ],
+        "name": [
+          "name"
+        ],
+        "category_level": [
+          "categoryLevel"
+        ],
+        "parent_category_id": [
+          "parentCategoryId"
+        ],
+        "scheme_id": [
+          "schemeId"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "description": [
+          "description"
+        ],
+        "status": [
+          "status"
+        ],
+        "version": [
+          "version"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "knowledge_models",
+      "name": "路由-知识模型",
+      "group": "routing",
+      "file": "kg/import/routing_metadata/knowledge_models.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "KnowledgeModel"
+      },
+      "mapping": {
+        "model_id": [
+          "id",
+          "modelId"
+        ],
+        "name": [
+          "name"
+        ],
+        "model_type": [
+          "modelType"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "category_id": [
+          "categoryId"
+        ],
+        "version": [
+          "version"
+        ],
+        "description": [
+          "description"
+        ],
+        "schema_version": [
+          "schemaVersion"
+        ],
+        "enabled_entity_types": [
+          "enabledEntityTypes"
+        ],
+        "enabled_relation_types": [
+          "enabledRelationTypes"
+        ],
+        "retrieval_filter": [
+          "retrievalFilter"
+        ],
+        "validation_profile": [
+          "validationProfile"
+        ],
+        "status": [
+          "status"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "category_parent",
+      "name": "路由-父分类",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/category_parent.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "parentCategory",
+        "target_type": "ServiceCategory"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "category_belongs_to_scheme",
+      "name": "路由-分类属体系",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/category_belongs_to_scheme.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "belongsToScheme",
+        "target_type": "CategoryScheme"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "category_belongs_to_domain",
+      "name": "路由-分类属领域",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/category_belongs_to_domain.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ServiceCategory",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "model_applies_to_category",
+      "name": "路由-模型适用分类",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/model_applies_to_category.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "appliesToCategory",
+        "target_type": "ServiceCategory"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "model_belongs_to_domain",
+      "name": "路由-模型属领域",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/model_belongs_to_domain.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "model_extends_model",
+      "name": "路由-模型继承",
+      "group": "routing_rel",
+      "file": "kg/import/routing_metadata/model_extends_model.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "KnowledgeModel",
+        "relation": "extendsModel",
+        "target_type": "KnowledgeModel"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "departments",
+      "name": "共享-部门",
+      "group": "shared",
+      "file": "data/pilot/departments.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "Department"
+      },
+      "mapping": {
+        "department_id": [
+          "id",
+          "departmentId"
+        ],
+        "department_name": [
+          "name"
+        ],
+        "department_code": [
+          "departmentCode"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "materials",
+      "name": "共享-材料",
+      "group": "shared",
+      "file": "build/shared_ids/pilot/materials_out.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "Material"
+      },
+      "mapping": {
+        "material_id": [
+          "id",
+          "materialId"
+        ],
+        "material_name": [
+          "name"
+        ],
+        "canonical_name": [
+          "canonicalName"
+        ],
+        "merged_count": []
+      },
+      "shard": false
+    },
+    {
+      "key": "legal_bases",
+      "name": "共享-法规文件",
+      "group": "shared",
+      "file": "build/shared_ids/pilot/legal_bases_out.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "LegalBasis"
+      },
+      "mapping": {
+        "legal_basis_id": [
+          "id",
+          "legalBasisId"
+        ],
+        "law_name": [
+          "name"
+        ],
+        "document_number": [
+          "documentNumber"
+        ],
+        "published_date": [
+          "publishedDate"
+        ],
+        "law_url": [
+          "lawUrl"
+        ],
+        "citation_count": []
+      },
+      "shard": false
+    },
+    {
+      "key": "legal_citations",
+      "name": "共享-法规条款",
+      "group": "shared",
+      "file": "build/shared_ids/pilot/legal_citations_out.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "LegalCitation"
+      },
+      "mapping": {
+        "legal_citation_id": [
+          "id",
+          "citationId"
+        ],
+        "name": [
+          "name"
+        ],
+        "article": [
+          "article"
+        ],
+        "clause_content": [
+          "content"
+        ],
+        "law_name": [],
+        "document_number": [],
+        "published_date": [],
+        "law_url": [],
+        "first_source_legal_basis_id": [],
+        "source_id_count": []
+      },
+      "shard": false
+    },
+    {
+      "key": "conditions",
+      "name": "弱实体-办理条件",
+      "group": "weak",
+      "file": "data/pilot/conditions.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceCondition"
+      },
+      "mapping": {
+        "condition_id": [
+          "id",
+          "conditionId"
+        ],
+        "condition_text": [
+          "description"
+        ],
+        "condition_name": [
+          "name"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "process_steps",
+      "name": "弱实体-办理步骤",
+      "group": "weak",
+      "file": "data/pilot/process_steps.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ProcessStep"
+      },
+      "mapping": {
+        "process_step_id": [
+          "id",
+          "processStepId"
+        ],
+        "step_name": [
+          "name"
+        ],
+        "step_code": [
+          "stepCode"
+        ],
+        "handler": [
+          "handler"
+        ],
+        "time_limit": [
+          "timeLimit"
+        ],
+        "check_standard": [
+          "checkStandard"
+        ],
+        "step_result": [
+          "description"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "results",
+      "name": "弱实体-办理结果",
+      "group": "weak",
+      "file": "data/pilot/results.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceResult"
+      },
+      "mapping": {
+        "result_id": [
+          "id",
+          "resultId"
+        ],
+        "result_name": [
+          "name"
+        ],
+        "result_type": [
+          "resultType"
+        ],
+        "result_description": [
+          "description"
+        ],
+        "license_code": [
+          "licenseCode"
+        ],
+        "validity_period": [
+          "validityPeriod"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "faqs",
+      "name": "弱实体-问答",
+      "group": "weak",
+      "file": "data/pilot/faqs.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "FAQ"
+      },
+      "mapping": {
+        "faq_id": [
+          "id",
+          "faqId"
+        ],
+        "question": [
+          "name"
+        ],
+        "answer": [
+          "answer"
+        ],
+        "order_no": []
+      },
+      "shard": false
+    },
+    {
+      "key": "service_channels",
+      "name": "弱实体-办理渠道",
+      "group": "weak",
+      "file": "data/pilot/service_channels.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "ServiceChannel"
+      },
+      "mapping": {
+        "channel_id": [
+          "id",
+          "channelId"
+        ],
+        "channel_type": [
+          "channelType"
+        ],
+        "channel_value": [
+          "name"
+        ],
+        "service_time": [
+          "serviceTime"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "fees",
+      "name": "弱实体-收费",
+      "group": "weak",
+      "file": "data/pilot/fees.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "Fee"
+      },
+      "mapping": {
+        "fee_id": [
+          "id",
+          "feeId"
+        ],
+        "fee_name": [
+          "name"
+        ],
+        "fee_standard": [
+          "feeStandard"
+        ],
+        "fee_basis": [
+          "description"
+        ],
+        "fee_status": [
+          "feeStatus"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "services",
+      "name": "事项-法人服务",
+      "group": "services",
+      "file": "data/pilot/services.csv",
+      "schema_target": {
+        "kind": "entity",
+        "type": "GovernmentService"
+      },
+      "mapping": {
+        "service_id": [
+          "id",
+          "serviceId"
+        ],
+        "service_name": [
+          "name"
+        ],
+        "category_l1": [
+          "categoryL1"
+        ],
+        "category_l2": [
+          "categoryL2"
+        ],
+        "department_name": [
+          "departmentName"
+        ],
+        "department_code": [
+          "departmentCode"
+        ],
+        "source_url": [
+          "sourceUrl"
+        ],
+        "source_file": [
+          "sourceFile"
+        ],
+        "source_line": [
+          "sourceLine"
+        ],
+        "publish_date": [
+          "publishDate"
+        ],
+        "version_date": [
+          "versionDate"
+        ],
+        "domain_id": [
+          "domainId"
+        ],
+        "category_id": [
+          "categoryId"
+        ],
+        "model_id": [
+          "modelId"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_handled_by",
+      "name": "关系-主管部门",
+      "group": "relations",
+      "file": "data/pilot/service_handled_by.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "handledBy",
+        "target_type": "Department"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "department_id": [
+          "end_id"
+        ],
+        "department_role": [
+          "departmentRole"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_collaborates_with",
+      "name": "关系-协同部门",
+      "group": "relations",
+      "file": "data/pilot/service_collaborates_with.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "collaboratesWith",
+        "target_type": "Department"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "department_id": [
+          "end_id"
+        ],
+        "participates_in_step": [
+          "participatesInStep"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_requires_material",
+      "name": "关系-需要材料",
+      "group": "relations",
+      "file": "build/shared_ids/pilot/service_requires_material_out.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "requiresMaterial",
+        "target_type": "Material"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "material_id": [
+          "end_id"
+        ],
+        "required": [
+          "required"
+        ],
+        "order_no": [
+          "orderNo"
+        ],
+        "material_description": [
+          "materialDescription"
+        ],
+        "acceptance_standard": [
+          "acceptanceStandard"
+        ],
+        "material_type": [
+          "materialType"
+        ],
+        "source_type": [
+          "sourceType"
+        ],
+        "submission_format": [
+          "submissionFormat"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_has_condition",
+      "name": "关系-办理条件",
+      "group": "relations",
+      "file": "data/pilot/service_has_condition.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasCondition",
+        "target_type": "ServiceCondition"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "condition_id": [
+          "end_id"
+        ],
+        "condition_source": [
+          "conditionSource"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_has_process_step",
+      "name": "关系-办理步骤",
+      "group": "relations",
+      "file": "data/pilot/service_has_process_step.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasProcessStep",
+        "target_type": "ProcessStep"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "process_step_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "process_step_next",
+      "name": "关系-下一步骤",
+      "group": "relations",
+      "file": "data/pilot/process_step_next.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "ProcessStep",
+        "relation": "nextStep",
+        "target_type": "ProcessStep"
+      },
+      "mapping": {
+        "service_id": [],
+        "from_process_step_id": [
+          "start_id"
+        ],
+        "to_process_step_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_produces_result",
+      "name": "关系-办理结果",
+      "group": "relations",
+      "file": "data/pilot/service_produces_result.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "producesResult",
+        "target_type": "ServiceResult"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "result_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_based_on",
+      "name": "关系-引用条款",
+      "group": "relations",
+      "file": "build/shared_ids/pilot/service_based_on_out.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "citesLegal",
+        "target_type": "LegalCitation"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "legal_citation_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ],
+        "basis_source": [
+          "basisSource"
+        ],
+        "source_legal_basis_id": []
+      },
+      "shard": true
+    },
+    {
+      "key": "part_of",
+      "name": "关系-条款属法规",
+      "group": "relations",
+      "file": "build/shared_ids/pilot/part_of.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "LegalCitation",
+        "relation": "partOf",
+        "target_type": "LegalBasis"
+      },
+      "mapping": {
+        "legal_citation_id": [
+          "start_id"
+        ],
+        "legal_basis_id": [
+          "end_id"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_has_faq",
+      "name": "关系-问答",
+      "group": "relations",
+      "file": "data/pilot/service_has_faq.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasFaq",
+        "target_type": "FAQ"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "faq_id": [
+          "end_id"
+        ],
+        "order_no": [
+          "orderNo"
+        ]
+      },
+      "shard": false
+    },
+    {
+      "key": "service_has_channel",
+      "name": "关系-渠道",
+      "group": "relations",
+      "file": "data/pilot/service_has_channel.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasChannel",
+        "target_type": "ServiceChannel"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "channel_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_has_fee",
+      "name": "关系-收费",
+      "group": "relations",
+      "file": "data/pilot/service_has_fee.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "hasFee",
+        "target_type": "Fee"
+      },
+      "mapping": {
+        "service_id": [
+          "start_id"
+        ],
+        "fee_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_belongs_to_domain",
+      "name": "关系-事项属领域",
+      "group": "service_routing",
+      "file": "kg/import/routing_metadata/service_belongs_to_domain.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "belongsToDomain",
+        "target_type": "ServiceDomain"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_classified_as",
+      "name": "关系-事项分类",
+      "group": "service_routing",
+      "file": "kg/import/routing_metadata/service_classified_as.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "classifiedAs",
+        "target_type": "ServiceCategory"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    },
+    {
+      "key": "service_uses_model",
+      "name": "关系-事项用模型",
+      "group": "service_routing",
+      "file": "kg/import/routing_metadata/service_uses_model.csv",
+      "schema_target": {
+        "kind": "relation",
+        "source_type": "GovernmentService",
+        "relation": "usesModel",
+        "target_type": "KnowledgeModel"
+      },
+      "mapping": {
+        "start_id": [
+          "start_id"
+        ],
+        "end_id": [
+          "end_id"
+        ]
+      },
+      "shard": true
+    }
+  ]
+}

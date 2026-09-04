@@ -17,11 +17,12 @@ services:
       - neo4j
       - minio
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/server/logs:/home/admin/logs
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     dns:
       # 2026-08-10 修复：Mac 睡眠唤醒后容器内 DNS 转发失效（127.0.0.11 无上游），
       # 导致服务端 LLM 校验/调用外网 API（api.deepseek.com）Connection error；显式指定公网 DNS。
@@ -46,7 +47,6 @@ services:
     image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
     container_name: release-openspg-mysql
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/mysql/data:/var/lib/mysql
     environment:
       TZ: Asia/Shanghai
@@ -80,7 +80,6 @@ services:
       - NEO4J_dbms_security_procedures_unrestricted=*
       - NEO4J_dbms_security_procedures_allowlist=*
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/neo4j/data:/data
       - ./volumes/neo4j/logs:/logs
 
@@ -97,5 +96,4 @@ services:
       - 9000:9000
       - 9001:9001
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/minio/data:/data
