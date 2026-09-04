@@ -235,10 +235,13 @@ POOL_QUERIES: dict[str, str] = {
         "WITH s, collect(fi) AS items "
         + _pool_return("items")
     ),
-    # 2 跳·部门：{部门} 还负责办理哪些事项（反向 handledBy，排除同名事项）
+    # 2 跳·部门：{部门} 还负责办理哪些事项（反向 handledBy，排除同名事项）。
+    # 锚点度预筛 <= HOP_TARGET_MAX：避免热门部门（管数万事项）让 collect 爆炸，
+    # 且冷门锚点天然满足目标集上界，配合 >= HOP_TARGET_MIN 构成 3-8 区间。
     "multi_hop_dept": (
         f"MATCH (s:`{SERVICE_LABEL}`) WHERE {_SERVICE_FILTER} "
         f"MATCH (s)-[:`handledBy`]->(d:`{DEPARTMENT_LABEL}`) "
+        f"WHERE COUNT {{ (d)<-[:`handledBy`]-() }} <= {HOP_TARGET_MAX} "
         f"MATCH (d)<-[:`handledBy`]-(o:`{SERVICE_LABEL}`) "
         "WHERE o.`name` IS NOT NULL AND o.`name` <> s.`name` "
         "WITH s, d.`name` AS anchorName, collect(DISTINCT o.`name`) AS items "
@@ -249,16 +252,19 @@ POOL_QUERIES: dict[str, str] = {
     "multi_hop_material": (
         f"MATCH (s:`{SERVICE_LABEL}`) WHERE {_SERVICE_FILTER} "
         f"MATCH (s)-[:`requiresMaterial`]->(m:`{MATERIAL_LABEL}`) "
+        f"WHERE COUNT {{ (m)<-[:`requiresMaterial`]-() }} <= {HOP_TARGET_MAX} "
         f"MATCH (m)<-[:`requiresMaterial`]-(o:`{SERVICE_LABEL}`) "
         "WHERE o.`name` IS NOT NULL AND o.`name` <> s.`name` "
         "WITH s, m.`name` AS anchorName, collect(DISTINCT o.`name`) AS items "
         f"WHERE size(items) >= {HOP_TARGET_MIN} "
         + _pool_return("items", "anchorName")
     ),
-    # 2 跳·法规：还有哪些事项的办理依据是《{法规}》（LegalBasis 反向 partOf+citesLegal）
+    # 2 跳·法规：还有哪些事项的办理依据是《{法规}》（LegalBasis 反向 partOf+citesLegal）。
+    # 锚点度用 citation 数做代理上界：事项数 <= 引用数（同一事项同法规多引用被 DISTINCT 去重）。
     "multi_hop_legal": (
         f"MATCH (s:`{SERVICE_LABEL}`) WHERE {_SERVICE_FILTER} "
         f"MATCH (s)-[:`citesLegal`]->(:`{CITATION_LABEL}`)-[:`partOf`]->(b:`{BASIS_LABEL}`) "
+        f"WHERE COUNT {{ (b)<-[:`partOf`]-(:`{CITATION_LABEL}`) }} <= {HOP_TARGET_MAX} "
         f"MATCH (b)<-[:`partOf`]-(:`{CITATION_LABEL}`)<-[:`citesLegal`]-(o:`{SERVICE_LABEL}`) "
         "WHERE o.`name` IS NOT NULL AND o.`name` <> s.`name` "
         "WITH s, b.`name` AS anchorName, collect(DISTINCT o.`name`) AS items "
@@ -470,6 +476,7 @@ def build_rows(
     pools: dict[tuple[str, str], list[dict]],
     categories: Sequence[str],
     per_type: int,
+    types: Sequence[str] = QUESTION_TYPES,
 ) -> tuple[list[dict], dict[str, Any]]:
     """从候选池选题：题型顺序 × categoryL1 轮转分层，直至每型满 per_type 或池尽。
 
@@ -484,7 +491,7 @@ def build_rows(
     }
     rows: list[dict] = []
     used: Counter[str] = Counter()
-    for type_key in QUESTION_TYPES:
+    for type_key in types:
         cursor = {cat: 0 for cat in categories}
         remaining = per_type
         while remaining > 0:
@@ -549,6 +556,7 @@ def generate(
     per_type: int = 6,
     seed: int = DEFAULT_SEED,
     pool_per_cat: int = DEFAULT_POOL_PER_CAT,
+    types: Sequence[str] = QUESTION_TYPES,
     log: Callable[[str], None] = print,
 ) -> tuple[list[dict], dict[str, Any]]:
     with driver.session(database=NEO4J_DB) as session:
@@ -556,8 +564,8 @@ def generate(
         if not categories:
             raise RuntimeError("图中未找到任何 categoryL1 非空的事项节点")
         pools = fetch_pools(session, categories, random.Random(seed),
-                            pool_per_cat=pool_per_cat, log=log)
-    return build_rows(pools, categories, per_type)
+                            pool_per_cat=pool_per_cat, types=types, log=log)
+    return build_rows(pools, categories, per_type, types=types)
 
 
 def write_csv(rows: Sequence[dict], path: str | Path) -> None:
@@ -615,11 +623,23 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
                         metavar="N", help="每个（题型×categoryL1）候选池大小（默认 40）")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED, metavar="N",
                         help="Python 侧抽样随机种子（默认 42；图侧候选池用 Neo4j rand()）")
+    parser.add_argument("--types", metavar="LIST", default=None,
+                        help="逗号分隔的题型子集（默认全部 9 型）。合法值："
+                             + ",".join(QUESTION_TYPES)
+                             + "。例：--types material,department,legal,condition,process,faq")
     args = parser.parse_args(argv)
     if args.per_type < 1:
         parser.error("--per-type 必须 >= 1")
     if args.pool_per_cat < 1:
         parser.error("--pool-per-cat 必须 >= 1")
+    types = QUESTION_TYPES
+    if args.types:
+        picked = [t.strip() for t in args.types.split(",") if t.strip()]
+        bad = [t for t in picked if t not in QUESTION_TYPES]
+        if bad:
+            parser.error(f"--types 含未知题型：{','.join(bad)}")
+        types = tuple(picked)
+    args.selected_types = types
     if not args.ids_out:
         args.ids_out = str(Path(args.out).with_suffix("")) + "_service_ids.txt"
     return args
@@ -633,7 +653,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
         try:
             rows, stats = generate(driver, per_type=args.per_type, seed=args.seed,
-                                   pool_per_cat=args.pool_per_cat, log=_default_log)
+                                   pool_per_cat=args.pool_per_cat,
+                                   types=args.selected_types, log=_default_log)
         finally:
             driver.close()
     except _NEO4J_FATAL as e:  # type: ignore[misc]
@@ -644,12 +665,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     print("\n===== 每题型生成统计 =====")
-    for type_key in QUESTION_TYPES:
+    for type_key in args.selected_types:
         print(f"  {type_key:<18} 生成 {stats['per_type'][type_key]:>3} 题"
               f"（重抽 {stats['resampled'][type_key]} 次，"
               f"跳过超用事项 {stats['skipped_used'][type_key]} 次）")
     total = len(rows)
-    short = [t for t in QUESTION_TYPES if stats["per_type"][t] < args.per_type]
+    short = [t for t in args.selected_types if stats["per_type"][t] < args.per_type]
     print(f"总计 {total} 题"
           + (f"（注意：{'、'.join(short)} 未达每型 {args.per_type} 题，"
              f"图数据可能偏稀，可增大 --pool-per-cat 或降低 --per-type）" if short else ""))

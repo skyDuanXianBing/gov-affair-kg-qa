@@ -480,7 +480,7 @@ class GovRetriever:
             "legalTimeLimit": clean(a.get("legalTimeLimit")),
             "promiseTimeLimit": clean(a.get("promiseTimeLimit")),
         }
-        sid = f"a.{{{ID_PROP['service']}:$id}}"
+        sid = f"{{{ID_PROP['service']}:$id}}"
         # 材料（共享 materialId 后同名天然合并，DISTINCT 保留无害）
         mats = session.run(
             f"MATCH (a:`{LABELS['service']}` {sid})-[:requiresMaterial]->(m:`{LABELS['material']}`) "

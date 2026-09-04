@@ -595,6 +595,17 @@ class ZwdmxgjSchemaTests(SchemaSwitchTestBase):
         self.assertEqual(ctx["faqs"][0]["question"], "多久办完？")
         self.assertEqual(ctx["fees"][0]["standard"], "20元")
 
+    def test_expand_cypher_no_var_prefixed_property_map(self):
+        """回归：属性 map 语法不得带变量前缀（a.{serviceId:$id} 非法，曾在线上冒烟暴露）。"""
+        inst = self._retriever_stub()
+        session = FakeSession(lambda query, params: [])
+        inst.expand_affair(session, "SVC-1")
+        inst.expand_material(session, "MAT-1")
+        inst.expand_citation(session, "CIT-1")
+        joined = chr(10).join(session.queries)
+        for bad in ("a.{", "m.{", "c.{", "b.{", "s.{", "o.{"):
+            self.assertNotIn(bad, joined, f"{bad!r} 出现在查询中")
+
     def test_expand_material_and_citation_cypher(self):
         inst = self._retriever_stub()
 

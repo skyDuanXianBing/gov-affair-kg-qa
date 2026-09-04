@@ -357,14 +357,21 @@ class OllamaEmbedder:
     """顺序嵌入器：POST {base_url}/api/embeddings，单条单请求（ollama 单条语义）。"""
 
     def __init__(self, base_url: str = OLLAMA_URL, model: str = EMBED_MODEL,
-                 timeout: float = EMBED_TIMEOUT, expected_dim: int = EMBED_DIM):
+                 timeout: float = EMBED_TIMEOUT, expected_dim: int = EMBED_DIM,
+                 max_chars: int = 0):
         self.endpoint = base_url.rstrip("/") + "/api/embeddings"
         self.model = model
         self.timeout = timeout
         self.expected_dim = expected_dim
+        # 嵌入前截断上限（字符数）；0=不截断。bge-m3 上下文 8192 token，
+        # 长法条/长条件全文会超限，检索用嵌入取前缀即可。
+        self.max_chars = max_chars
 
     def embed_one(self, text: str) -> list[float]:
-        body = json.dumps({"model": self.model, "prompt": text},
+        if self.max_chars > 0 and len(text) > self.max_chars:
+            text = text[:self.max_chars]
+        body = json.dumps({"model": self.model, "prompt": text,
+                           "options": {"num_ctx": 8192}},
                           ensure_ascii=False).encode("utf-8")
         request = urllib.request.Request(
             self.endpoint, data=body, method="POST",
@@ -601,6 +608,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
                              "重刷请配合新的 --state-file）")
     parser.add_argument("--dry-run", action="store_true",
                         help="只统计将回填的节点，不调 ollama、不写图、不写 state")
+    parser.add_argument("--max-chars", type=int, default=0, metavar="N",
+                        help="嵌入前文本截断上限（字符，0=不截断）；长法条/长条件超出 bge-m3 8192 token 上下文时使用，如 4000")
     parser.add_argument("--state-file", metavar="PATH", default=str(DEFAULT_STATE_FILE),
                         help="断点 state 文件（JSON Lines，默认 %(default)s）")
     args = parser.parse_args(argv)
@@ -631,7 +640,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     state = BackfillState(args.state_file, read_only=args.dry_run)
     results: dict[str, dict[str, int]] = {}
-    embedder = OllamaEmbedder()
+    embedder = OllamaEmbedder(max_chars=args.max_chars)
     subset_desc = f"{len(service_ids)} 个 serviceId 子集" if service_ids else "全量"
     print(f"# Neo4j={NEO4J_URI} db={NEO4J_DB}；ollama={OLLAMA_URL} "
           f"model={EMBED_MODEL}（{EMBED_DIM} 维）")

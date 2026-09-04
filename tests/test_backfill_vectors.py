@@ -379,7 +379,7 @@ class EmbedderTests(unittest.TestCase):
             vec = self._embedder().embed_one("办理生育登记")
         self.assertEqual(vec, [0.1, 0.2])
         self.assertEqual(captured["url"], "http://127.0.0.1:11434/api/embeddings")
-        self.assertEqual(captured["body"], {"model": "bge-m3", "prompt": "办理生育登记"})
+        self.assertEqual(captured["body"], {"model": "bge-m3", "prompt": "办理生育登记", "options": {"num_ctx": 8192}})
         self.assertEqual(captured["timeout"], 5)
 
     def test_http_error_is_service_error_with_hint(self) -> None:
