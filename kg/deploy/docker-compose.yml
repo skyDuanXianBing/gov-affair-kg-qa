@@ -80,7 +80,8 @@ services:
       - NEO4J_dbms_security_procedures_unrestricted=*
       - NEO4J_dbms_security_procedures_allowlist=*
     volumes:
-      - ./volumes/neo4j/data:/data
+      # 2026-09-05 数据迁入 named volume（ext4/VHDX）：gRPC-FUSE bind mount 随机写仅 ~5 vec/s，named volume 快 40 倍
+      - openspg_neo4j_data:/data
       - ./volumes/neo4j/logs:/logs
 
   minio:
@@ -97,3 +98,7 @@ services:
       - 9001:9001
     volumes:
       - ./volumes/minio/data:/data
+
+volumes:
+  openspg_neo4j_data:
+    external: true

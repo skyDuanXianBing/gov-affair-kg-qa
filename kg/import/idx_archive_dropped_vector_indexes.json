@@ -1,0 +1,170 @@
+{
+ "_zwdmx_g_j_f_a_q_answer_vector_index": {
+  "name": "_zwdmx_g_j_f_a_q_answer_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.FAQ"
+  ],
+  "properties": [
+   "_answer_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_f_a_q_name_vector_index": {
+  "name": "_zwdmx_g_j_f_a_q_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.FAQ"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_government_service_name_vector_index": {
+  "name": "_zwdmx_g_j_government_service_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.GovernmentService"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_legal_basis_name_vector_index": {
+  "name": "_zwdmx_g_j_legal_basis_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.LegalBasis"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_legal_citation_content_vector_index": {
+  "name": "_zwdmx_g_j_legal_citation_content_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.LegalCitation"
+  ],
+  "properties": [
+   "_content_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_legal_citation_name_vector_index": {
+  "name": "_zwdmx_g_j_legal_citation_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.LegalCitation"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_material_name_vector_index": {
+  "name": "_zwdmx_g_j_material_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.Material"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ },
+ "_zwdmx_g_j_service_condition_name_vector_index": {
+  "name": "_zwdmx_g_j_service_condition_name_vector_index",
+  "entityType": "NODE",
+  "labelsOrTypes": [
+   "ZwdmxGJ.ServiceCondition"
+  ],
+  "properties": [
+   "_name_vector"
+  ],
+  "type": "VECTOR",
+  "options": {
+   "indexProvider": "vector-2.0",
+   "indexConfig": {
+    "vector.hnsw.m": 16,
+    "vector.hnsw.ef_construction": 100,
+    "vector.dimensions": 1024,
+    "vector.similarity_function": "COSINE",
+    "vector.quantization.enabled": true
+   }
+  }
+ }
+}
