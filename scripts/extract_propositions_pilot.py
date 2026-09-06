@@ -37,6 +37,17 @@ json.dumps(...).encode("utf-8") 构造（与 scripts/backfill_vectors.py 同法�
   python scripts/extract_propositions_pilot.py                 # 1000 块试点
   python scripts/extract_propositions_pilot.py --limit 50      # 小规模试跑
   python scripts/extract_propositions_pilot.py --sample-only   # 只抽样看分层，不调 LLM
+
+思考链开/关 A/B 对比（默认关思考，与历史行为一致）：
+  python scripts/extract_propositions_pilot.py --enable-thinking --max-tokens 16000 \
+      --out data/pilot/propositions_pilot_thinking_on.csv \
+      --summary data/pilot/propositions_pilot_thinking_on_summary.md \
+      --state-file kg/import/checkpoints/extract_pilot_state_thinking_on.json
+  注意：A/B 两组必须用不同前缀的 --out/--summary 与不同 --state-file（state 的
+  done 记账按 chunk_id 跳过，共用会把另一组整体跳过）；开思考时 reasoning_content
+  与 content 共享 completion 预算，--max-tokens 必须 enough 大（实测建议 16000，
+  2000 量级会被思考链耗光导致 content 为 null）。两组结果用
+  scripts/compare_thinking_ab.py 生成对比报告。
 """
 
 from __future__ import annotations
@@ -356,28 +367,40 @@ class LlmClient:
 
     qwen3.8-27b 为思考型模型：响应 message.reasoning_content 是思考链，
     本类只返回 message.content（最终答案）。
+
+    enable_thinking=False（默认，向后兼容）：请求体显式带
+    chat_template_kwargs={"enable_thinking": False} 关闭思考链。
+    enable_thinking=True：请求体不带 chat_template_kwargs（qwen3.8 默认开思考），
+    此时 reasoning_content 与 content 共享 completion 预算，必须配大 max_tokens
+    （实测建议 16000；2000 量级会被思考链耗光导致 content 为 null）。
     """
 
     def __init__(self, base_url: str | None = None, model: str | None = None,
-                 api_key: str | None = None, timeout: float = DEFAULT_TIMEOUT):
+                 api_key: str | None = None, timeout: float = DEFAULT_TIMEOUT,
+                 *, enable_thinking: bool = False,
+                 max_tokens: int = LLM_MAX_TOKENS):
         self.endpoint = (base_url or os.environ.get(
             "EXTRACT_BASE_URL", DEFAULT_BASE_URL)).rstrip("/") + "/chat/completions"
         self.model = model or os.environ.get("EXTRACT_MODEL", DEFAULT_MODEL)
         self.api_key = (api_key if api_key is not None
                         else os.environ.get("EXTRACT_API_KEY", ""))
         self.timeout = timeout
+        self.enable_thinking = enable_thinking
+        self.max_tokens = max_tokens
 
     def chat(self, messages: list[dict[str, str]]) -> str:
+        payload: dict = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": LLM_TEMPERATURE,
+            "max_tokens": self.max_tokens,
+        }
+        if not self.enable_thinking:
+            # 思考链会把 completion 预算耗光导致 content 为 null（实测）；
+            # qwen3 系列支持关闭思考，抽取任务无需思考链，且更快。
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
         body = json.dumps(
-            {
-                "model": self.model,
-                "messages": messages,
-                "temperature": LLM_TEMPERATURE,
-                "max_tokens": LLM_MAX_TOKENS,
-                # 思考链会把 completion 预算耗光导致 content 为 null（实测）；
-                # qwen3 系列支持关闭思考，抽取任务无需思考链，且更快。
-                "chat_template_kwargs": {"enable_thinking": False},
-            },
+            payload,
             ensure_ascii=False,
         ).encode("utf-8")
         headers = {"Content-Type": "application/json"}
@@ -761,13 +784,17 @@ def write_summary(
     lines.append("")
     lines.append(f"- 生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append(f"- 模型：{client.model}（endpoint {client.endpoint}，"
-                 f"temperature {LLM_TEMPERATURE}，max_tokens {LLM_MAX_TOKENS}）")
+                 f"temperature {LLM_TEMPERATURE}，"
+                 f"max_tokens {args.max_tokens}，"
+                 f"思考链：{'开' if args.enable_thinking else '关'}）")
     lines.append(f"- prompt 版本：{PROMPT_VERSION}")
     lines.append(f"- 参数：--limit {args.limit} --seed {args.seed} "
                  f"--workers {args.workers} --timeout {args.timeout} "
                  f"--max-chunk-chars {args.max_chunk_chars} "
                  f"--min-chunk-chars {args.min_chunk_chars} "
-                 f"--reservoir-cap {args.reservoir_cap}")
+                 f"--reservoir-cap {args.reservoir_cap} "
+                 f"--enable-thinking {args.enable_thinking} "
+                 f"--max-tokens {args.max_tokens}")
     lines.append("")
     lines.append("## 块统计")
     lines.append("")
@@ -899,6 +926,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         metavar="N", help=f"并发数（默认 {DEFAULT_WORKERS}）")
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT,
                         metavar="SEC", help=f"单请求超时（默认 {DEFAULT_TIMEOUT}s）")
+    parser.add_argument("--enable-thinking", action="store_true",
+                        help="开启 LLM 思考链（默认关，与历史行为一致）。开思考时"
+                             "请求体不带 chat_template_kwargs（qwen3.8 默认开思考），"
+                             "且必须配大 --max-tokens（建议 16000），否则思考链会"
+                             "耗光 completion 预算导致 content 为 null。A/B 对比时"
+                             "请与关思考组使用不同前缀的 --out/--summary 与不同 "
+                             "--state-file")
+    parser.add_argument("--max-tokens", type=int, default=LLM_MAX_TOKENS,
+                        metavar="N",
+                        help=f"请求 max_tokens（默认 {LLM_MAX_TOKENS}；"
+                             f"--enable-thinking 时建议 16000）")
     parser.add_argument("--retries", type=int, default=1, metavar="N",
                         help="单块重试次数（默认 1，即最多调用 1+1 次）")
     parser.add_argument("--sample-only", action="store_true",
@@ -916,6 +954,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--workers 必须 >= 1")
     if args.timeout <= 0:
         parser.error("--timeout 必须 > 0")
+    if args.max_tokens < 1:
+        parser.error("--max-tokens 必须 >= 1")
     if args.retries < 0:
         parser.error("--retries 必须 >= 0")
     return args
@@ -925,17 +965,29 @@ def main(argv: list[str] | None = None,
          client_factory: Callable[..., LlmClient] | None = None,
          log: Callable[[str], None] = _default_log) -> int:
     args = parse_args(argv)
-    client = (client_factory or LlmClient)(timeout=args.timeout)
+    client = (client_factory or LlmClient)(
+        timeout=args.timeout, enable_thinking=args.enable_thinking,
+        max_tokens=args.max_tokens)
 
     state = load_state(args.state_file)
     done_ids = {str(c).strip() for c in state.get("done", [])}
     if state.get("done"):
-        if state.get("model") != client.model or \
-                state.get("prompt_version") != PROMPT_VERSION:
-            print(f"警告: state（model={state.get('model')}, "
-                  f"prompt_version={state.get('prompt_version')}）与当前运行"
-                  f"（model={client.model}, prompt_version={PROMPT_VERSION}）"
-                  f"不一致，继续按已完成 chunk_id 跳过；如需全新抽取请更换 "
+        mismatches: list[str] = []
+        if state.get("model") != client.model:
+            mismatches.append(f"model={state.get('model')!r} → {client.model!r}")
+        if state.get("prompt_version") != PROMPT_VERSION:
+            mismatches.append(
+                f"prompt_version={state.get('prompt_version')!r} → "
+                f"{PROMPT_VERSION!r}")
+        # 思考模式不同的 state 混用（如 A/B 组误共用）只告警不阻断：
+        # done 记账按 chunk_id 跳过，共用会把另一组整体跳过。
+        if state.get("thinking") is not None and \
+                state.get("thinking") != args.enable_thinking:
+            mismatches.append(
+                f"thinking={state.get('thinking')} → {args.enable_thinking}")
+        if mismatches:
+            print(f"警告: state 与当前运行不一致（{'；'.join(mismatches)}），"
+                  f"继续按已完成 chunk_id 跳过；如需全新抽取请更换 "
                   f"--state-file。", file=sys.stderr)
 
     # ---- 抽样（可复用 state 缓存样本，免重扫 17GB 输入）
@@ -1022,6 +1074,8 @@ def main(argv: list[str] | None = None,
         if result and result.get("status") in ("ok", "empty"):
             done_ids.add(item["chunk_id"])
     state.update({"model": client.model, "prompt_version": PROMPT_VERSION,
+                  "thinking": args.enable_thinking,
+                  "max_tokens": args.max_tokens,
                   "done": sorted(done_ids)})
     save_state(args.state_file, state)
 

@@ -15,19 +15,26 @@
  10. state 读写 / 参数匹配判断 / filter_pending 跳过；
  11. 并发归集顺序无关（mock ThreadPoolExecutor.submit + as_completed 乱序）；
  12. extract_one 重试：超时/5xx 重试后成功，4xx 不重试，parse_error 留 raw_head；
- 13. main() 端到端（FakeClient + 临时小 CSV）：写 out CSV、state 记账、
-     重跑跳过、失败块重跑补齐、state 样本复用免重扫、--sample-only 不调 LLM。
+  13. main() 端到端（FakeClient + 临时小 CSV）：写 out CSV、state 记账、
+     重跑跳过、失败块重跑补齐、state 样本复用免重扫、--sample-only 不调 LLM；
+  14. 思考链开/关参数化：--enable-thinking 开时请求体无 chat_template_kwargs 且
+     max_tokens 取参数值；关时带 enable_thinking=False（向后兼容）；CLI 默认值、
+     参数校验、client_factory 透传、summary 参数区显示思考状态、state 记录
+     thinking 供混用告警。
 """
 
 from __future__ import annotations
 
+import contextlib
 import csv
+import io
 import json
 import sys
 import tempfile
 import threading
 import unittest
 import urllib.error
+import urllib.request
 from pathlib import Path
 from unittest import mock
 
@@ -519,6 +526,85 @@ class TestState(unittest.TestCase):
         self.assertEqual(skipped, 2)
 
 
+# ================================================================ 思考链开/关参数化
+
+
+class _FakeUrlopenResponse:
+    """够用的 urlopen 上下文管理器桩：read() 返回预置 JSON。"""
+
+    def __init__(self, payload: dict):
+        self._raw = json.dumps(payload).encode("utf-8")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def read(self):
+        return self._raw
+
+
+def _request_body_for(client: ep.LlmClient) -> dict:
+    """mock urlopen 捕获 LlmClient.chat 实际发出的请求体（不连网）。"""
+    captured: dict = {}
+
+    def fake_urlopen(request, timeout=None):
+        captured["request"] = request
+        return _FakeUrlopenResponse(
+            {"choices": [{"message": {"content": "[]"}}]})
+
+    with mock.patch.object(urllib.request, "urlopen", fake_urlopen):
+        content = client.chat([{"role": "user", "content": "原文"}])
+    assert content == "[]"
+    return json.loads(captured["request"].data.decode("utf-8"))
+
+
+class TestThinkingModeRequest(unittest.TestCase):
+    """--enable-thinking 开/关两种模式的请求体差异。"""
+
+    def test_default_disables_thinking_and_uses_default_max_tokens(self):
+        # 默认（关思考）与历史行为完全一致：显式关思考 + LLM_MAX_TOKENS
+        body = _request_body_for(ep.LlmClient())
+        self.assertEqual(body["chat_template_kwargs"],
+                         {"enable_thinking": False})
+        self.assertEqual(body["max_tokens"], ep.LLM_MAX_TOKENS)
+        self.assertEqual(body["temperature"], ep.LLM_TEMPERATURE)
+        self.assertEqual(body["model"], ep.LlmClient().model)
+
+    def test_enable_thinking_omits_flag_and_uses_param_max_tokens(self):
+        # 开思考：请求体不带 chat_template_kwargs（qwen3.8 默认开思考），
+        # max_tokens 取参数值（开思考建议 16000，防 reasoning_content 挤没 content）
+        body = _request_body_for(
+            ep.LlmClient(enable_thinking=True, max_tokens=16000))
+        self.assertNotIn("chat_template_kwargs", body)
+        self.assertEqual(body["max_tokens"], 16000)
+
+    def test_disabled_thinking_uses_param_max_tokens(self):
+        body = _request_body_for(
+            ep.LlmClient(enable_thinking=False, max_tokens=12000))
+        self.assertEqual(body["chat_template_kwargs"],
+                         {"enable_thinking": False})
+        self.assertEqual(body["max_tokens"], 12000)
+
+
+class TestParseArgsThinking(unittest.TestCase):
+
+    def test_defaults_backward_compatible(self):
+        args = ep.parse_args([])
+        self.assertFalse(args.enable_thinking)
+        self.assertEqual(args.max_tokens, ep.LLM_MAX_TOKENS)
+
+    def test_explicit_thinking_flags(self):
+        args = ep.parse_args(["--enable-thinking", "--max-tokens", "16000"])
+        self.assertTrue(args.enable_thinking)
+        self.assertEqual(args.max_tokens, 16000)
+
+    def test_invalid_max_tokens_rejected(self):
+        with self.assertRaises(SystemExit):
+            ep.parse_args(["--max-tokens", "0"])
+
+
 # ================================================================ 单块抽取
 
 
@@ -698,6 +784,10 @@ class TestMainEndToEnd(unittest.TestCase):
             self.assertTrue(summary.startswith("# 命题抽取试点报告"))
             self.assertIn("谓词分布", summary)
             self.assertIn("人工抽检清单", summary)
+            # summary 参数区显示思考状态（默认关，向后兼容）
+            self.assertIn("思考链：关", summary)
+            self.assertIn(f"--max-tokens {ep.LLM_MAX_TOKENS}", summary)
+            self.assertIn("--enable-thinking False", summary)
             # 第二次运行：state 复用样本，全部跳过，不追加行
             rc2, logs2 = self._run(tmp, RespondingClient())
             self.assertEqual(rc2, 0)
@@ -756,6 +846,62 @@ class TestMainEndToEnd(unittest.TestCase):
             self.assertEqual(rc2, 0)
             self.assertTrue(any("复用 state 缓存样本" in m for m in logs))
             self.assertFalse(other.exists())
+
+    def test_enable_thinking_passed_to_client_and_summary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            received: dict = {}
+
+            def factory(**kwargs):
+                received.update(kwargs)
+                return RespondingClient()
+
+            chunks = tmp / "chunks.csv"
+            _write_chunks_csv(chunks, [
+                _chunk_row("c1", _FIELD_TEXTS["condition"]),
+                _chunk_row("c2", _FIELD_TEXTS["process"]),
+                _chunk_row("c3", _FIELD_TEXTS["material"]),
+            ])
+            argv = ["--chunks", str(chunks),
+                    "--out", str(tmp / "props.csv"),
+                    "--summary", str(tmp / "summary.md"),
+                    "--state-file", str(tmp / "state.json"),
+                    "--limit", "3", "--seed", "11", "--workers", "4",
+                    "--enable-thinking", "--max-tokens", "16000"]
+            rc = ep.main(argv, client_factory=factory, log=lambda *_: None)
+            self.assertEqual(rc, 0)
+            self.assertIs(received.get("enable_thinking"), True)
+            self.assertEqual(received.get("max_tokens"), 16000)
+            summary = (tmp / "summary.md").read_text(encoding="utf-8")
+            self.assertIn("思考链：开", summary)
+            self.assertIn("max_tokens 16000", summary)
+            self.assertIn("--enable-thinking True", summary)
+            # state 记录 thinking 模式，供误混用时告警
+            state = ep.load_state(tmp / "state.json")
+            self.assertIs(state.get("thinking"), True)
+            self.assertEqual(state.get("max_tokens"), 16000)
+
+    def test_state_thinking_mismatch_warns(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            # 首跑：关思考（默认），state 记录 thinking=False
+            rc, _ = self._run(tmp, RespondingClient())
+            self.assertEqual(rc, 0)
+            # 二跑：同一 state 开思考（A/B 误共用 state 的典型错误）→ 告警且全跳过
+            argv = ["--chunks", str(tmp / "chunks.csv"),
+                    "--out", str(tmp / "props.csv"),
+                    "--summary", str(tmp / "summary.md"),
+                    "--state-file", str(tmp / "state.json"),
+                    "--limit", "3", "--seed", "11",
+                    "--enable-thinking", "--max-tokens", "16000"]
+            stderr = io.StringIO()
+            logs: list[str] = []
+            with contextlib.redirect_stderr(stderr):
+                rc2 = ep.main(argv, client_factory=lambda **kw: RespondingClient(),
+                              log=logs.append)
+            self.assertEqual(rc2, 0)
+            self.assertIn("thinking=False → True", stderr.getvalue())
+            self.assertTrue(any("全部样本块已完成" in m for m in logs))
 
 
 if __name__ == "__main__":
